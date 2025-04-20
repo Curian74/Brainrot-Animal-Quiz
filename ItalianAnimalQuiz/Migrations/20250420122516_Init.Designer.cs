@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ItalianAnimalQuiz.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250420080246_Init")]
+    [Migration("20250420122516_Init")]
     partial class Init
     {
         /// <inheritdoc />
@@ -25,21 +25,6 @@ namespace ItalianAnimalQuiz.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("AnswerQuestion", b =>
-                {
-                    b.Property<int>("CorrectAnswersId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("QuestionsId")
-                        .HasColumnType("int");
-
-                    b.HasKey("CorrectAnswersId", "QuestionsId");
-
-                    b.HasIndex("QuestionsId");
-
-                    b.ToTable("AnswerQuestion");
-                });
-
             modelBuilder.Entity("ItalianAnimalQuiz.Models.Answer", b =>
                 {
                     b.Property<int>("Id")
@@ -48,12 +33,43 @@ namespace ItalianAnimalQuiz.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<int>("QuestionId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Title")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
+                    b.HasIndex("QuestionId");
+
                     b.ToTable("Answers");
+                });
+
+            modelBuilder.Entity("ItalianAnimalQuiz.Models.AnswerAttempt", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int?>("AnswerId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsMarked")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("QuizAttemptId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AnswerId");
+
+                    b.HasIndex("QuizAttemptId");
+
+                    b.ToTable("AnswerAttempts");
                 });
 
             modelBuilder.Entity("ItalianAnimalQuiz.Models.Question", b =>
@@ -83,11 +99,24 @@ namespace ItalianAnimalQuiz.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime>("CreateAt")
-                        .HasColumnType("datetime2");
-
                     b.Property<double>("DurationInSeconds")
                         .HasColumnType("float");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Quizzes");
+                });
+
+            modelBuilder.Entity("ItalianAnimalQuiz.Models.QuizAttempt", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreateAt")
+                        .HasColumnType("datetime2");
 
                     b.Property<DateTime>("EndAt")
                         .HasColumnType("datetime2");
@@ -98,6 +127,9 @@ namespace ItalianAnimalQuiz.Migrations
                     b.Property<bool>("IsPassed")
                         .HasColumnType("bit");
 
+                    b.Property<int>("QuizId")
+                        .HasColumnType("int");
+
                     b.Property<double>("Score")
                         .HasColumnType("float");
 
@@ -106,7 +138,9 @@ namespace ItalianAnimalQuiz.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Quizzes");
+                    b.HasIndex("QuizId");
+
+                    b.ToTable("QuizAttempts");
                 });
 
             modelBuilder.Entity("QuestionQuiz", b =>
@@ -124,19 +158,43 @@ namespace ItalianAnimalQuiz.Migrations
                     b.ToTable("QuestionQuiz");
                 });
 
-            modelBuilder.Entity("AnswerQuestion", b =>
+            modelBuilder.Entity("ItalianAnimalQuiz.Models.Answer", b =>
                 {
-                    b.HasOne("ItalianAnimalQuiz.Models.Answer", null)
-                        .WithMany()
-                        .HasForeignKey("CorrectAnswersId")
+                    b.HasOne("ItalianAnimalQuiz.Models.Question", "Question")
+                        .WithMany("CorrectAnswers")
+                        .HasForeignKey("QuestionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("ItalianAnimalQuiz.Models.Question", null)
+                    b.Navigation("Question");
+                });
+
+            modelBuilder.Entity("ItalianAnimalQuiz.Models.AnswerAttempt", b =>
+                {
+                    b.HasOne("ItalianAnimalQuiz.Models.Answer", "Answer")
                         .WithMany()
-                        .HasForeignKey("QuestionsId")
+                        .HasForeignKey("AnswerId");
+
+                    b.HasOne("ItalianAnimalQuiz.Models.QuizAttempt", "QuizAttempt")
+                        .WithMany("AnswerAttempts")
+                        .HasForeignKey("QuizAttemptId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Answer");
+
+                    b.Navigation("QuizAttempt");
+                });
+
+            modelBuilder.Entity("ItalianAnimalQuiz.Models.QuizAttempt", b =>
+                {
+                    b.HasOne("ItalianAnimalQuiz.Models.Quiz", "Quiz")
+                        .WithMany()
+                        .HasForeignKey("QuizId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Quiz");
                 });
 
             modelBuilder.Entity("QuestionQuiz", b =>
@@ -152,6 +210,16 @@ namespace ItalianAnimalQuiz.Migrations
                         .HasForeignKey("QuizzesId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("ItalianAnimalQuiz.Models.Question", b =>
+                {
+                    b.Navigation("CorrectAnswers");
+                });
+
+            modelBuilder.Entity("ItalianAnimalQuiz.Models.QuizAttempt", b =>
+                {
+                    b.Navigation("AnswerAttempts");
                 });
 #pragma warning restore 612, 618
         }

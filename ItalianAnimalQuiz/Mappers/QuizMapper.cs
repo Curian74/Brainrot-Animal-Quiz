@@ -10,9 +10,6 @@ namespace ItalianAnimalQuiz.Mappers
             return new Quiz
             {
                 DurationInSeconds = dto.DurationInSeconds,
-                IsFinished = dto.IsFinished,
-                IsPassed = dto.IsPassed,
-                Score = dto.Score,
             };
         }
     }
