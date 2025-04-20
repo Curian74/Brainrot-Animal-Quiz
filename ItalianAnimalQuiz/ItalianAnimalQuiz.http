@@ -1,0 +1,6 @@
+@ItalianAnimalQuiz_HostAddress = http://localhost:5101
+
+GET {{ItalianAnimalQuiz_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
