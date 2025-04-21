@@ -9,7 +9,8 @@ namespace ItalianAnimalQuiz.Mappers
         {
             return new Quiz
             {
-                DurationInSeconds = dto.DurationInSeconds,
+                DurationInMinutes = dto.DurationInMinutes,
+                NumberOfQuestions = dto.NumberOfQuestions,
             };
         }
     }

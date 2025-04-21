@@ -3,11 +3,9 @@ import Home from '../pages/Home'
 
 const MyRouter = () => {
     return (
-        <div>
-            <Routes>
-                <Route path='/' element={<Home />}></Route>
-            </Routes>
-        </div>
+        <Routes>
+            <Route path='/' element={<Home />}></Route>
+        </Routes>
     )
 }
 
