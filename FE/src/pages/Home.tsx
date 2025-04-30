@@ -1,3 +1,4 @@
+import NewExam from "@/layouts/NewExam";
 import DefaultLayout from "./DefaultLayout";
 
 const Home = () => {
@@ -14,12 +15,11 @@ const Home = () => {
           </div>
 
           <div className="flex justify-center mt-24">
-            <button
-              className="bg-[#0969da] text-2xl rounded-lg py-3 px-8 hover:bg-blue-800 transition cursor-pointer text-white font-semibold">
-              Play Now
-            </button>
+            <NewExam/>
           </div>
+
         </div>
+
       </DefaultLayout>
     </>
   );
