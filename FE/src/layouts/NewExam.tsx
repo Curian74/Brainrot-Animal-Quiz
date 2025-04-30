@@ -3,7 +3,6 @@ import {
     Dialog,
     DialogClose,
     DialogContent,
-    DialogDescription,
     DialogFooter,
     DialogHeader,
     DialogTitle,
@@ -12,9 +11,30 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { DialogTrigger } from "@radix-ui/react-dialog"
 import { useState } from "react"
+import { useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+import * as yup from 'yup';
+
+const validationSchema = yup.object().shape({
+    numberOfQuestion: yup.number().required().min(1)
+})
 
 const NewExam = () => {
     const [value, setValue] = useState('');
+
+    const { register, handleSubmit, formState: { errors } } = useForm({
+        resolver: yupResolver(validationSchema),
+    });
+
+    const submitForm = async () => {
+        try {
+
+        }
+
+        catch (err) {
+            console.log(err);
+        }
+    }
 
     return (
         <div>
@@ -42,10 +62,17 @@ const NewExam = () => {
                         </div>
                     </div>
                     <DialogFooter className="sm:justify-center">
-                        <DialogClose asChild>
-                            <Button className="cursor-pointer bg-[#0969da] hover:bg-blue-800 transition text-white " type="button" variant="secondary">
+                        <form onSubmit={handleSubmit(submitForm)}>
+                            <Button
+                                {...register("numberOfQuestion")}
+                                className="cursor-pointer bg-[#0969da] hover:bg-blue-800 transition text-white "
+                                type="button"
+                                variant="secondary">
                                 Let's go 🚀
                             </Button>
+                            {errors.numberOfQuestion?.message && <p className="text-red-600">{errors.numberOfQuestion.message}</p>}
+                        </form>
+                        <DialogClose>
                         </DialogClose>
                     </DialogFooter>
                 </DialogContent>
