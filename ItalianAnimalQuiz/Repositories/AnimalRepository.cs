@@ -1,5 +1,7 @@
 ﻿using ItalianAnimalQuiz.Data;
+using ItalianAnimalQuiz.Dtos;
 using ItalianAnimalQuiz.Interfaces;
+using ItalianAnimalQuiz.Mappers;
 using ItalianAnimalQuiz.Models;
 using ItalianAnimalQuiz.Queries;
 using ItalianAnimalQuiz.Utils;
@@ -16,15 +18,16 @@ namespace ItalianAnimalQuiz.Repositories
             _context = context;
         }
 
-        public async Task<PagedResult<Animal>> GetAllAsync(AnimalQuery query)
+        public async Task<PagedResult<AnimalDto>> GetAllAsync(AnimalQuery query)
         {
-            var animals = await _context.Animals.ToListAsync();
+            var animals = await _context.Animals.Include(a => a.Answers).ToListAsync();
+            var animalDto = animals.Select(x => x.ToDto());
 
             var skip = (query.PageIndex - 1) * query.PageSize;
 
-            var pagination = animals.Skip(skip).Take(query.PageSize);
+            var pagedData = animalDto.Skip(skip).Take(query.PageSize);
 
-            return new PagedResult<Animal>(pagination, query.PageIndex, query.PageSize, animals.Count());
+            return new PagedResult<AnimalDto>(pagedData, query.PageIndex, query.PageSize, animalDto.Count());
         }
     }
 }

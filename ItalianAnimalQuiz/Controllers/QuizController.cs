@@ -22,7 +22,7 @@ namespace ItalianAnimalQuiz.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(CreateQuizDto quizDto)
+        public async Task<IActionResult> Create([FromBody] CreateQuizDto quizDto)
         {
             try
             {

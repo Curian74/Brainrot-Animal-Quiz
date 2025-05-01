@@ -1,6 +1,5 @@
 ﻿using ItalianAnimalQuiz.Interfaces;
 using ItalianAnimalQuiz.Queries;
-using ItalianAnimalQuiz.Repositories;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ItalianAnimalQuiz.Controllers

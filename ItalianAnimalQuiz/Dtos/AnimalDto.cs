@@ -1,13 +1,12 @@
-﻿namespace ItalianAnimalQuiz.Models
+﻿namespace ItalianAnimalQuiz.Dtos
 {
-    public class Animal
+    public class AnimalDto
     {
         public int Id { get; set; }
         public string? Title { get; set; }
         public string? ImageUrl { get; set; }
         public string? AudioSource { get; set; }
 
-        public IList<Answer>? Answers { get; set; }
-        public IList<Quiz>? Quizzes { get; set; }
+        public IList<AnswerDto>? Answers { get; set; }
     }
 }

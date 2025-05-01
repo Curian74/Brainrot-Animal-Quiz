@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using ItalianAnimalQuiz.Models;
+using System.ComponentModel.DataAnnotations;
 
 namespace ItalianAnimalQuiz.Dtos
 {
@@ -9,5 +10,7 @@ namespace ItalianAnimalQuiz.Dtos
         public double DurationInMinutes { get; set; }
         [Range(1, int.MaxValue)]
         public int NumberOfQuestions { get; set; }
+
+        public IList<Animal>? Animals { get; set; }
     }
 }
