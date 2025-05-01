@@ -2,10 +2,11 @@
 
 namespace ItalianAnimalQuiz.Models
 {
-    public class Question
+    public class Animal
     {
         public int Id { get; set; }
         public string? Title { get; set; }
+        public string? ImageUrl { get; set; }
         public QuestionTypeEnum QuestionType { get; set; }
         public string? AudioSource { get; set; }
 

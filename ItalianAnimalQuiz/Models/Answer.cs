@@ -9,6 +9,6 @@ namespace ItalianAnimalQuiz.Models
 
         [ForeignKey(nameof(Question))]
         public int QuestionId { get; set; }
-        public Question? Question { get; set; }
+        public Animal? Question { get; set; }
     }
 }

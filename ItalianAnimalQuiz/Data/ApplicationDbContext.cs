@@ -7,7 +7,7 @@ namespace ItalianAnimalQuiz.Data
     {
         public ApplicationDbContext(DbContextOptions options) : base(options) { }
 
-        public DbSet<Question> Questions { get; set; }
+        public DbSet<Animal> Animals { get; set; }
         public DbSet<Answer> Answers { get; set; }
         public DbSet<Quiz> Quizzes { get; set; }
         public DbSet<QuizAttempt> QuizAttempts { get; set; }
