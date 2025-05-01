@@ -6,9 +6,10 @@ namespace ItalianAnimalQuiz.Models
     {
         public int Id { get; set; }
         public string? Title { get; set; }
+        public bool IsCorrect { get; set; }
 
-        [ForeignKey(nameof(Question))]
-        public int QuestionId { get; set; }
-        public Animal? Question { get; set; }
+        [ForeignKey(nameof(Animal))]
+        public int AnimalId { get; set; }
+        public Animal? Animal { get; set; }
     }
 }

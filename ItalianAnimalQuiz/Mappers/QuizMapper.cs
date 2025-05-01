@@ -11,6 +11,7 @@ namespace ItalianAnimalQuiz.Mappers
             {
                 DurationInMinutes = dto.DurationInMinutes,
                 NumberOfQuestions = dto.NumberOfQuestions,
+                Name = dto.Name,
             };
         }
     }
