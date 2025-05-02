@@ -116,6 +116,36 @@ const CreateQuiz = () => {
                 <h3 className="text-lg font-semibold mb-2">Add questions from the question bank:</h3>
 
                 <div className="space-y-3 max-h-96 overflow-y-auto border rounded p-3 bg-gray-50">
+                    {/* Search input */}
+                    <div className="flex items-center">
+                        <div className="w-1/2 relative">
+                            {/* Search icon */}
+                            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    strokeWidth={1.5}
+                                    stroke="currentColor"
+                                    className="w-5 h-5 text-gray-500"
+                                >
+                                    <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
+                                    />
+                                </svg>
+                            </div>
+
+                            {/* Input */}
+                            <input
+                                type="text"
+                                placeholder="Search questions..."
+                                className="border rounded px-10 py-1.5 w-full bg-white"
+                            />
+                        </div>
+                    </div>
+
                     {animals.map((q, index) => (
                         <div
                             key={index}
@@ -142,12 +172,21 @@ const CreateQuiz = () => {
                             </div>
                         </div>
                     ))}
+
+                    {/* Pagination (UI only) */}
+                    <div className="flex justify-end mt-3">
+                        <div className="flex gap-2 items-center text-sm">
+                            <button className="px-3 py-1 rounded border bg-white hover:bg-gray-100">Prev</button>
+                            <span className="px-2">Page 1 of 5</span>
+                            <button className="px-3 py-1 rounded border bg-white hover:bg-gray-100">Next</button>
+                        </div>
+                    </div>
                 </div>
             </div>
 
             {/* Submit */}
             <button
-                className="bg-blue-600 cursor-pointer text-white px-6 py-2 rounded hover:bg-blue-700">
+                className="bg-blue-600 cursor-pointer text-white font-medium px-6 py-2 rounded hover:bg-blue-700">
                 Create
             </button>
         </form>
