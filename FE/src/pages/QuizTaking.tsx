@@ -49,7 +49,7 @@ const QuizTaking = () => {
                 <div className='flex justify-between mt-8 gap-4'>
                     {/* Previous */}
                     <button
-                        className='flex items-center justify-center w-1/2 bg-white border border-gray-300 text-gray-700 py-3 rounded-lg hover:shadow-md hover:ring-2 hover:ring-gray-300 transition duration-200'>
+                        className='flex cursor-pointer items-center justify-center w-1/2 bg-white border border-gray-300 text-gray-700 py-3 rounded-lg hover:shadow-md hover:ring-2 hover:ring-gray-300 transition duration-200'>
                         <svg xmlns="http://www.w3.org/2000/svg"
                             fill="none" viewBox="0 0 24 24"
                             strokeWidth={1.5} stroke="currentColor"
@@ -61,7 +61,7 @@ const QuizTaking = () => {
 
                     {/* Next */}
                     <button
-                        className='flex items-center justify-center w-1/2 bg-white border border-gray-300 text-gray-700 py-3 rounded-lg hover:ring-2 hover:ring-gray-300 transition duration-200'>
+                        className='flex cursor-pointer items-center justify-center w-1/2 bg-white border border-gray-300 text-gray-700 py-3 rounded-lg hover:ring-2 hover:ring-gray-300 transition duration-200'>
                         <span className='mr-2 font-medium'>Next</span>
                         <svg xmlns="http://www.w3.org/2000/svg"
                             fill="none" viewBox="0 0 24 24"

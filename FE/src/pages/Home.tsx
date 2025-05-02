@@ -14,7 +14,7 @@ const Home = () => {
             <h1 className="uppercase text-3xl text-purple-500 font-bold text-center">Italian Brainrot animals quiz</h1>
           </div>
 
-          <div className="flex justify-center mt-24">
+          <div className="flex justify-center mt-12">
             <NewExam/>
           </div>
 

@@ -38,11 +38,23 @@ const NewExam = () => {
 
     return (
         <div>
+
+            <div>
+                <button
+                    className="bg-[#0969da] text-2xl rounded-lg py-3 px-13 hover:bg-blue-800 transition cursor-pointer text-white font-semibold">
+                    Play now
+                </button>
+            </div>
+
+            <div className="flex justify-center items-center my-6">
+                <p className="text-xl">OR</p>
+            </div>
+
             <Dialog>
                 <DialogTrigger>
                     <button
                         className="bg-[#0969da] text-2xl rounded-lg py-3 px-8 hover:bg-blue-800 transition cursor-pointer text-white font-semibold">
-                        Play Now
+                        Practice first
                     </button>
                 </DialogTrigger>
                 <DialogContent className="sm:max-w-md">
@@ -77,6 +89,7 @@ const NewExam = () => {
                     </DialogFooter>
                 </DialogContent>
             </Dialog>
+
         </div>
     )
 }
