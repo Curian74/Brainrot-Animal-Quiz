@@ -12,7 +12,16 @@ namespace ItalianAnimalQuiz.Mappers
                 DurationInMinutes = dto.DurationInMinutes,
                 NumberOfQuestions = dto.NumberOfQuestions,
                 Name = dto.Name,
-                Animals = dto.Animals,
+            };
+        }
+
+        public static QuizDto ToDtoFromEntity(this Quiz quiz)
+        {
+            return new QuizDto
+            {
+                DurationInMinutes = quiz.DurationInMinutes,
+                Name = quiz.Name,
+                NumberOfQuestions = quiz.NumberOfQuestions,
             };
         }
     }

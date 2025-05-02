@@ -5,7 +5,7 @@ namespace ItalianAnimalQuiz.Interfaces
 {
     public interface IQuizRepository
     {
-        Task<Quiz> CreateQuizAsync(CreateQuizDto dto);
+        Task<QuizDto> CreateQuizAsync(CreateQuizDto dto);
         Task<IEnumerable<Quiz>> GetAllQuizAsync();
     }
 }
