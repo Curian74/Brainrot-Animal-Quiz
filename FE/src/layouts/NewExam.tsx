@@ -14,6 +14,7 @@ import { useState } from "react"
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
+import { useNavigate } from "react-router"
 
 const validationSchema = yup.object().shape({
     numberOfQuestion: yup.number().required().min(1)
@@ -21,6 +22,8 @@ const validationSchema = yup.object().shape({
 
 const NewExam = () => {
     const [value, setValue] = useState('');
+
+    const navigate = useNavigate();
 
     const { register, handleSubmit, formState: { errors } } = useForm({
         resolver: yupResolver(validationSchema),
@@ -41,6 +44,7 @@ const NewExam = () => {
 
             <div>
                 <button
+                    onClick={() => navigate("quiz-list")}
                     className="bg-[#0969da] text-2xl rounded-lg py-3 px-13 hover:bg-blue-800 transition cursor-pointer text-white font-semibold">
                     Play now
                 </button>
