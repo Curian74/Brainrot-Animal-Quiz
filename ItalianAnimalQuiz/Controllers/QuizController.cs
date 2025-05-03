@@ -1,5 +1,6 @@
 ﻿using ItalianAnimalQuiz.Dtos;
 using ItalianAnimalQuiz.Interfaces;
+using ItalianAnimalQuiz.Queries;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ItalianAnimalQuiz.Controllers
@@ -19,6 +20,12 @@ namespace ItalianAnimalQuiz.Controllers
         public async Task<IActionResult> GetAll()
         {
             return Ok(await _quizRepository.GetAllQuizAsync());
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetPaged([FromQuery] QuizQuery quizQuery)
+        {
+            return Ok(await _quizRepository.GetPagedAsync(quizQuery));
         }
 
         [HttpPost]

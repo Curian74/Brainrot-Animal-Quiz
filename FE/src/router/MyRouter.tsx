@@ -11,7 +11,7 @@ const MyRouter = () => {
         <Routes>
             <Route path='/' element={<Home />}></Route>
             <Route path='/test' element={<Test/>}></Route>
-            <Route path='/quiz-handle/:quizId' element={<QuizTaking/>}></Route>
+            <Route path='/quiz-handle/:quizId/:attemptId' element={<QuizTaking/>}></Route>
             <Route path='/create-animal' element={<CreateAnimal/>}></Route>
             <Route path='/create-quiz' element={<CreateQuiz/>}></Route>
             <Route path='/quiz-list' element={<QuizList/>}></Route>

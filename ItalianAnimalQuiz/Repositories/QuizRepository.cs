@@ -3,6 +3,8 @@ using ItalianAnimalQuiz.Dtos;
 using ItalianAnimalQuiz.Interfaces;
 using ItalianAnimalQuiz.Mappers;
 using ItalianAnimalQuiz.Models;
+using ItalianAnimalQuiz.Queries;
+using ItalianAnimalQuiz.Utils;
 using Microsoft.EntityFrameworkCore;
 
 namespace ItalianAnimalQuiz.Repositories
@@ -50,6 +52,19 @@ namespace ItalianAnimalQuiz.Repositories
             var quizzes = await _context.Quizzes.ToListAsync();
 
             return quizzes;
+        }
+
+        public async Task<PagedResult<QuizDto>> GetPagedAsync(QuizQuery quizQuery)
+        {
+            var quizzes = await _context.Quizzes.ToListAsync();
+
+            var skipNumber = (quizQuery.PageIndex - 1) * quizQuery.PageSize;
+
+            var paginatedData = quizzes.Skip(skipNumber).Take(quizQuery.PageSize);
+
+            var dto = paginatedData.Select(x => x.ToDtoFromEntity());
+
+            return new PagedResult<QuizDto>(dto, quizQuery.PageIndex, quizQuery.PageSize, quizzes.Count());
         }
     }
 }

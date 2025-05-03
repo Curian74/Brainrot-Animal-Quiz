@@ -10,8 +10,15 @@ const createQuiz = async (quizData: CreateQuizRequest) => {
     return response.data;
 }
 
+const getAllPagedQuiz = async (pageSize: number, pageIndex: number) => {
+    const response = await api.get(`Quiz/GetPaged?PageSize=${pageSize}&PageIndex=${pageIndex}`)
+
+    return response.data;
+}
+
 const QuizService = {
     createQuiz,
+    getAllPagedQuiz
 }
 
 export default QuizService;

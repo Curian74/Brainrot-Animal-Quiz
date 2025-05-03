@@ -1,5 +1,7 @@
 export interface Quiz {
-
+    name: string,
+    durationInMinutes: number,
+    numberOfQuestions: number,
 }
 
 export interface CreateQuizRequest {
