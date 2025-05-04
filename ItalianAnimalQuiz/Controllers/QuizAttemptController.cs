@@ -40,14 +40,22 @@ namespace ItalianAnimalQuiz.Controllers
         [HttpGet]
         public async Task<IActionResult> AttemptById([FromQuery] int attemptId)
         {
-            var quizAttempt = await _quizAttemptRepository.GetQuizAttemptByIdAsync(attemptId);
-
-            if (quizAttempt == null)
+            try
             {
-                return NotFound();
+                var quizAttempt = await _quizAttemptRepository.GetQuizAttemptByIdAsync(attemptId);
+
+                if (quizAttempt == null)
+                {
+                    return NotFound();
+                }
+
+                return Ok(quizAttempt);
             }
 
-            return Ok(quizAttempt);
+            catch (KeyNotFoundException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
     }
 }

@@ -45,6 +45,11 @@ namespace ItalianAnimalQuiz.Repositories
                 .Include(q => q.AnswerAttempts)
                 .FirstOrDefaultAsync(x => x.Id == attemptId);
 
+            if (quizAttempt == null)
+            {
+                throw new KeyNotFoundException("Quiz attempt not found.");
+            }
+
             var dtoEntity = quizAttempt.ToDtoFromEntity();
 
             dtoEntity.AnswerAttempts = await _context.AnswerAttempts.Select(x => new AnswerAttemptDto
