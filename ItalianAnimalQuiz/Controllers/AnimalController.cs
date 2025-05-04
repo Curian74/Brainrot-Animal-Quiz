@@ -21,6 +21,12 @@ namespace ItalianAnimalQuiz.Controllers
             return Ok(await _animalRepository.GetByIdAsync(animalId));
         }
 
+        [HttpGet]
+        public async Task<IActionResult> GetAllByQuizId([FromQuery] int quizId)
+        {
+            return Ok(await _animalRepository.GetAllByQuizIdAsync(quizId));
+        }
+
         [HttpGet]   
         public async Task<IActionResult> GetPaged([FromQuery] AnimalQuery animalQuery)
         {

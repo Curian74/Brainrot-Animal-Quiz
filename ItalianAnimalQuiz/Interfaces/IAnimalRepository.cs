@@ -8,5 +8,6 @@ namespace ItalianAnimalQuiz.Interfaces
     {
         Task<PagedResult<AnimalDto>> GetAllAsync(AnimalQuery query);
         Task<AnimalDto> GetByIdAsync(int animalId);
+        Task<IEnumerable<AnimalDto>> GetAllByQuizIdAsync(int quizId);
     }
 }

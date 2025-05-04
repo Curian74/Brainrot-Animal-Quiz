@@ -1,12 +1,15 @@
 
 import api from '../types/api';
 
-const GetPagedAnimals = async (pageSize: number, pageIndex: number) => {
-    const response = await api.get(`Animal/GetPaged?PageSize=${pageSize}&PageIndex=${pageIndex}`);
+const GetPagedAnimals = async (pageSize: number, pageIndex: number, quizId: number | string | undefined) => {
+    const response = await api.get(`Animal/GetPaged?PageSize=${pageSize}&PageIndex=${pageIndex}&QuizId=${quizId}`);
     return response.data; 
 }
 
-// Animal/GetById?animalId=1
+const getAllByQuizId = async (quizId: string | number | undefined) => {
+    const response = await api.get(`Animal/GetAllByQuizId?quizId=${quizId}`);
+    return response.data; 
+}
 
 const getAnimalById = async (animalId: string | number | undefined) => {
     const response = await api.get(`Animal/GetById?animalId=${animalId}`);
@@ -16,6 +19,7 @@ const getAnimalById = async (animalId: string | number | undefined) => {
 const AnimalService = {
     GetPagedAnimals,
     getAnimalById,
+    getAllByQuizId,
 }
 
 export default AnimalService;
