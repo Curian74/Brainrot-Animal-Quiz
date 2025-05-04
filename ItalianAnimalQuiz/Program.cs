@@ -19,6 +19,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(opt =>
 
 builder.Services.AddScoped<IQuizRepository, QuizRepository>();
 builder.Services.AddScoped<IAnimalRepository, AnimalRepository>();
+builder.Services.AddScoped<IQuizAttemptRepository, QuizAttemptRepository>();
 
 var MyAllowSpecificOrigins = "react_frontend";
 

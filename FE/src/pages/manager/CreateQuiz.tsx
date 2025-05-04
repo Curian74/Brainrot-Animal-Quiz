@@ -13,7 +13,7 @@ const validationSchema = yup.object().shape({
     name: yup.string().required('Quiz name is required.'),
     durationInMinutes: yup.number()
         .typeError('Please enter a valid number for duration.')
-        .min(1, 'Duration must be at least 1 minute.')
+        .min(0.1, 'Duration must be greater than 0.')
         .required('Quiz duration is required.'),
     numberOfQuestions: yup.number()
         .typeError('Please enter a valid number of questions.')
