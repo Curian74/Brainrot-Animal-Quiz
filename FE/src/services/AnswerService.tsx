@@ -5,8 +5,8 @@ const getAnswersByQuestionId = async (animalId: number | string | undefined) => 
     return response.data;
 }
 
-const AnimalService = {
+const AnswerService = {
     getAnswersByQuestionId,
 }
 
-export default AnimalService;
+export default AnswerService;

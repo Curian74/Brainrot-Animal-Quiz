@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ItalianAnimalQuiz.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/[controller]/[action]")]
     [ApiController]
     public class AnimalController : ControllerBase
     {
@@ -13,6 +13,12 @@ namespace ItalianAnimalQuiz.Controllers
         public AnimalController(IAnimalRepository animalRepository)
         {
             _animalRepository = animalRepository; 
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetById([FromQuery] int animalId)
+        {
+            return Ok(await _animalRepository.GetByIdAsync(animalId));
         }
 
         [HttpGet]   

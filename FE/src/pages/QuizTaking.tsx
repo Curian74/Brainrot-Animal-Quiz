@@ -6,6 +6,8 @@ import { useParams } from 'react-router';
 import { AnswerAttempt } from '@/types/AnswerAttempt';
 import { Answer } from '@/types/Answer';
 import AnswerService from '@/services/AnswerService';
+import AnimalService from '@/services/AnimalService';
+import { Animal } from '@/types/Animal';
 
 const QuizTaking = () => {
 
@@ -13,10 +15,22 @@ const QuizTaking = () => {
 
     // States
     const [quizAttempt, setQuizAttempt] = useState<QuizAttempt>();
+    const [currentQuestion, setCurrentQuestion] = useState<Animal>();
     const [answerAttempts, setAnswerAttempts] = useState<AnswerAttempt[]>([]);
     const [questionAnswers, setQuestionAnswers] = useState<Answer[]>([]);
 
     useEffect(() => {
+        const fetchQuestionById = async () => {
+            try {
+                const data = await AnimalService.getAnimalById(questionId);
+                setCurrentQuestion(data);
+            }
+
+            catch (err) {
+                console.log(err);
+            }
+        }
+
         const fetchAnswersByQuestionId = async () => {
             try {
                 const data = await AnswerService.getAnswersByQuestionId(questionId);
@@ -27,7 +41,10 @@ const QuizTaking = () => {
                 console.log(err);
             }
         }
+
+        fetchQuestionById();
         fetchAnswersByQuestionId();
+
     }, [questionId])
 
     useEffect(() => {
@@ -54,7 +71,7 @@ const QuizTaking = () => {
                 <div className='flex justify-center py-5'>
                     <img
                         className='max-h-[130px] object-contain'
-                        src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRmRk3mQDXC7DYDRwEoYnqpgSd2MuClBJnpZwltrmcMIr2BNnyB776W9wSzyjXLhw9Kl9k&usqp=CAU'
+                        src={currentQuestion?.imageUrl}
                         alt='quiz'
                     />
                 </div>
