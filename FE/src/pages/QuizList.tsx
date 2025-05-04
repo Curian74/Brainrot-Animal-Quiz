@@ -4,6 +4,8 @@ import { ChangeEvent, useEffect, useState } from "react";
 import { Quiz } from "@/types/Quiz";
 import CustomCircularLoading from "@/layouts/CustomCircularLoading";
 import { Pagination } from "@mui/material";
+import QuizAttemptService from "@/services/QuizAttemptService";
+import { CreateQuizAttemptRequest, QuizAttempt } from "@/types/QuizAttempt";
 
 const PAGE_SIZE = 5;
 
@@ -25,6 +27,18 @@ const QuizList = () => {
             setIsLoading(false);
         }
     };
+
+    const createQuizAttempt = async (data: number) => {
+        try{
+            await QuizAttemptService.createQuizAttempt(data);
+            alert('Ngon')
+        }
+
+        catch(err){
+            console.log(err);
+            alert('Ngu')
+        }
+    }
 
     useEffect(() => {
         getPagedQuizzes();
@@ -53,7 +67,7 @@ const QuizList = () => {
             <section className="border-2 border-gray-300 rounded-lg mt-3">
                 {/* Quiz List Section */}
                 {quizzes.map((q) => (
-                    <div className="my-10 flex gap-x-10 items-start ml-8">
+                    <div key={q.id} className="my-10 flex gap-x-10 items-start ml-8">
                         <div>
                             <img
                                 className="max-w-30"
@@ -69,6 +83,7 @@ const QuizList = () => {
 
                             <div className="my-3">
                                 <button
+                                    onClick={() => createQuizAttempt(q.id)}
                                     className="bg-[#0969da] text-md rounded-sm py-1 px-2 hover:bg-blue-800 transition cursor-pointer text-white font-semibold"
                                 >
                                     Play Now

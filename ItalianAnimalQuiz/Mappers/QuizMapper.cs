@@ -19,6 +19,7 @@ namespace ItalianAnimalQuiz.Mappers
         {
             return new QuizDto
             {
+                Id = quiz.Id,
                 DurationInMinutes = quiz.DurationInMinutes,
                 Name = quiz.Name,
                 NumberOfQuestions = quiz.NumberOfQuestions,

@@ -1,4 +1,5 @@
 export interface Quiz {
+    id: number;
     name: string,
     durationInMinutes: number,
     numberOfQuestions: number,
