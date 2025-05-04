@@ -11,6 +11,7 @@ namespace ItalianAnimalQuiz.Mappers
             {
                 IsCorrect = answer.IsCorrect,
                 Title = answer.Title,
+                Id = answer.Id,
             };
         }
     }
