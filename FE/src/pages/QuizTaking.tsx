@@ -37,21 +37,6 @@ const QuizTaking = () => {
     }, [])
 
     useEffect(() => {
-        // const fetchData = async () => {
-        //     try {
-        //         const data = await AnimalService.GetPagedAnimals(1, pageIndex, quizId);
-        //         setAnimals(data.items);
-
-        //         const questionId = data.items[0].id;
-
-        //         const answers = await AnswerService.getAnswersByQuestionId(questionId);
-        //         setQuestionAnswers(answers);
-        //     } catch (err) {
-        //         console.log(err);
-        //     }
-        // };
-        // fetchData();
-
         const fetchAllQuestions = async () => {
             try {
                 const data = await AnimalService.getAllByQuizId(quizId);
