@@ -1,6 +1,16 @@
+import { useEffect, useState } from 'react';
 import DefaultLayout from './DefaultLayout'
+import QuizAttemptService from '@/services/QuizAttemptService';
+import { QuizAttempt } from '@/types/QuizAttempt';
+import { useParams } from 'react-router';
+import { AnswerAttempt } from '@/types/AnswerAttempt';
 
 const QuizTaking = () => {
+
+    const [quizAttempt, setQuizAttempt] = useState<QuizAttempt>();
+    const [answerAttempts, setAnswerAttempts] = useState<AnswerAttempt[]>([]);
+
+    const { attemptId } = useParams();
 
     const items = [
         { id: 1, name: 'Object and Links' },
@@ -8,6 +18,21 @@ const QuizTaking = () => {
         { id: 3, name: 'Object and Links' },
         { id: 4, name: 'Object and Links' },
     ];
+
+    useEffect(() => {
+        const getQuizAttemptById = async (attemptId: string) => {
+            try {
+                const data = await QuizAttemptService.getQuizAttemptById(attemptId);
+                setQuizAttempt(data);
+                setAnswerAttempts(data.answerAttempts);
+            }
+
+            catch (err) {
+                console.log(err);
+            }
+        }
+        getQuizAttemptById(attemptId!);
+    }, [])
 
     return (
         <div>

@@ -1,3 +1,5 @@
+import { AnswerAttempt } from "./AnswerAttempt";
+
 export interface QuizAttempt {
     id: number;
     createAt: string;
@@ -7,6 +9,7 @@ export interface QuizAttempt {
     isPassed: boolean;
     score: number;
     quizId: number;
+    answerAttempts: AnswerAttempt[];
 }
 
 export interface CreateQuizAttemptRequest {

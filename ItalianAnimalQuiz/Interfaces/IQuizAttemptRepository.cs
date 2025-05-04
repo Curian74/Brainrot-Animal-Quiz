@@ -6,5 +6,6 @@ namespace ItalianAnimalQuiz.Interfaces
     public interface IQuizAttemptRepository
     {
         Task<QuizAttempt> CreateQuizAttemptAsync(NewQuizAttemptDto newQuizAttemptDto);
+        Task<QuizAttemptDto> GetQuizAttemptByIdAsync(int attemptId);
     }
 }

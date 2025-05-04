@@ -5,7 +5,7 @@ import { Quiz } from "@/types/Quiz";
 import CustomCircularLoading from "@/layouts/CustomCircularLoading";
 import { Pagination } from "@mui/material";
 import QuizAttemptService from "@/services/QuizAttemptService";
-import { CreateQuizAttemptRequest, QuizAttempt } from "@/types/QuizAttempt";
+import { useNavigate } from "react-router";
 
 const PAGE_SIZE = 5;
 
@@ -14,6 +14,8 @@ const QuizList = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [totalPages, setTotalPages] = useState(0);
     const [pageIndex, setPageIndex] = useState(1);
+
+    const navigate = useNavigate();
 
     const getPagedQuizzes = async () => {
         try {
@@ -30,13 +32,13 @@ const QuizList = () => {
 
     const createQuizAttempt = async (data: number) => {
         try{
-            await QuizAttemptService.createQuizAttempt(data);
-            alert('Ngon')
+            const dataResponse = await QuizAttemptService.createQuizAttempt(data);
+            const attemptId = dataResponse.id;
+            navigate(`/quiz-handle/${attemptId}`)
         }
 
         catch(err){
             console.log(err);
-            alert('Ngu')
         }
     }
 

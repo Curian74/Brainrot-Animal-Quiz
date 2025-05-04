@@ -1,7 +1,6 @@
 ﻿using ItalianAnimalQuiz.Dtos;
 using ItalianAnimalQuiz.Interfaces;
 using ItalianAnimalQuiz.Repositories;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ItalianAnimalQuiz.Controllers
@@ -36,6 +35,19 @@ namespace ItalianAnimalQuiz.Controllers
             {
                 return BadRequest(ex.Message);
             }
+        }
+        
+        [HttpGet]
+        public async Task<IActionResult> AttemptById([FromQuery] int attemptId)
+        {
+            var quizAttempt = await _quizAttemptRepository.GetQuizAttemptByIdAsync(attemptId);
+
+            if (quizAttempt == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(quizAttempt);
         }
     }
 }
