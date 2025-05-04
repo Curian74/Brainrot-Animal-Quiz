@@ -1,21 +1,24 @@
 import QuizService from "@/services/QuizService";
 import DefaultLayout from "./DefaultLayout";
-import { useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import { Quiz } from "@/types/Quiz";
-import CircularProgress from "@mui/material/CircularProgress";
 import CustomCircularLoading from "@/layouts/CustomCircularLoading";
+import { Pagination } from "@mui/material";
 
 const PAGE_SIZE = 5;
 
 const QuizList = () => {
     const [quizzes, setQuizzes] = useState<Quiz[]>([]);
     const [isLoading, setIsLoading] = useState(false);
+    const [totalPages, setTotalPages] = useState(0);
+    const [pageIndex, setPageIndex] = useState(1);
 
     const getPagedQuizzes = async () => {
         try {
             setIsLoading(true);
-            const data = await QuizService.getAllPagedQuiz(PAGE_SIZE, 1);
+            const data = await QuizService.getAllPagedQuiz(PAGE_SIZE, pageIndex);
             setQuizzes(data.items);
+            setTotalPages(data.totalPages);
         } catch (err) {
             console.log(err);
         } finally {
@@ -25,12 +28,16 @@ const QuizList = () => {
 
     useEffect(() => {
         getPagedQuizzes();
-    }, []);
+    }, [pageIndex]);
 
     if (isLoading) {
         return (
-            <CustomCircularLoading/>
+            <CustomCircularLoading />
         );
+    }
+
+    function handlePageChange(_: ChangeEvent<unknown>, page: number): void {
+        setPageIndex(page);
     }
 
     return (
@@ -38,15 +45,15 @@ const QuizList = () => {
             <h1 className="text-center text-3xl font-bold">Quiz List</h1>
             <hr className="my-3"></hr>
             <div>
-                <p className="italic text-gray-500">
+                <p className="italic text-gray-600">
                     Select one of the following quiz below to continue:
                 </p>
             </div>
 
-            <section className="h-screen">
+            <section className="border-2 border-gray-300 rounded-lg mt-3">
                 {/* Quiz List Section */}
                 {quizzes.map((q) => (
-                    <div className="my-10 flex gap-x-10 items-start">
+                    <div className="my-10 flex gap-x-10 items-start ml-8">
                         <div>
                             <img
                                 className="max-w-30"
@@ -70,6 +77,13 @@ const QuizList = () => {
                         </div>
                     </div>
                 ))}
+                <div className="pb-10 flex justify-end">
+                    <Pagination
+                        count={totalPages}
+                        page={pageIndex}
+                        onChange={handlePageChange}
+                        color="primary" />
+                </div>
             </section>
         </DefaultLayout>
     );
