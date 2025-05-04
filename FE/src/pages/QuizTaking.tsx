@@ -4,20 +4,31 @@ import QuizAttemptService from '@/services/QuizAttemptService';
 import { QuizAttempt } from '@/types/QuizAttempt';
 import { useParams } from 'react-router';
 import { AnswerAttempt } from '@/types/AnswerAttempt';
+import { Answer } from '@/types/Answer';
+import AnswerService from '@/services/AnswerService';
 
 const QuizTaking = () => {
 
+    const { attemptId, questionId } = useParams();
+
+    // States
     const [quizAttempt, setQuizAttempt] = useState<QuizAttempt>();
     const [answerAttempts, setAnswerAttempts] = useState<AnswerAttempt[]>([]);
+    const [questionAnswers, setQuestionAnswers] = useState<Answer[]>([]);
 
-    const { attemptId } = useParams();
+    useEffect(() => {
+        const fetchAnswersByQuestionId = async () => {
+            try {
+                const data = await AnswerService.getAnswersByQuestionId(questionId);
+                setQuestionAnswers(data);
+            }
 
-    const items = [
-        { id: 1, name: 'Object and Links' },
-        { id: 2, name: 'Object and Links' },
-        { id: 3, name: 'Object and Links' },
-        { id: 4, name: 'Object and Links' },
-    ];
+            catch (err) {
+                console.log(err);
+            }
+        }
+        fetchAnswersByQuestionId();
+    }, [questionId])
 
     useEffect(() => {
         const getQuizAttemptById = async (attemptId: string) => {
@@ -54,7 +65,7 @@ const QuizTaking = () => {
 
                 {/* Answers */}
                 <div className='grid grid-cols-1 md:grid-cols-2 gap-y-4'>
-                    {items.map((x, i) => (
+                    {questionAnswers.map((x, i) => (
                         <div
                             key={x.id}
                             className={`rounded-lg bg-white border cursor-pointer border-gray-300 w-96 py-4
@@ -64,7 +75,7 @@ const QuizTaking = () => {
                                     className='rounded-full text-sm font-medium bg-[#edeff4] px-3 py-1'>
                                     {i}
                                 </span>
-                                <span className='ml-5 text-gray-500'>{x.name}</span>
+                                <span className='ml-5 text-gray-500'>{x.title}</span>
                             </div>
                         </div>
                     ))}
