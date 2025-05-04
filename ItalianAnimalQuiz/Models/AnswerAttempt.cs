@@ -16,6 +16,5 @@ namespace ItalianAnimalQuiz.Models
         public int QuizAttemptId { get; set; }
         public QuizAttempt? QuizAttempt { get; set; }
 
-
     }
 }
