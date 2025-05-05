@@ -3,18 +3,19 @@ import DefaultLayout from './DefaultLayout'
 import QuizAttemptService from '@/services/QuizAttemptService';
 import { QuizAttempt } from '@/types/QuizAttempt';
 import { useParams } from 'react-router';
-import { AnswerAttempt } from '@/types/AnswerAttempt';
+import { AnswerAttempt, UpdateAnswerAttemptRequest } from '@/types/AnswerAttempt';
 import { Answer } from '@/types/Answer';
 import AnswerService from '@/services/AnswerService';
 import AnimalService from '@/services/AnimalService';
 import { Animal } from '@/types/Animal';
+import AnswerAttemptService from '@/services/AnswerAttemptService';
 
 const QuizTaking = () => {
 
     const { attemptId, quizId } = useParams();
 
     // States
-    const [quizAttempt, setQuizAttempt] = useState<QuizAttempt>();
+    // const [quizAttempt, setQuizAttempt] = useState<QuizAttempt>();
     const [currentQuestion, setCurrentQuestion] = useState<Animal>();
     const [answerAttempts, setAnswerAttempts] = useState<AnswerAttempt[]>([]);
     const [questionAnswers, setQuestionAnswers] = useState<Answer[]>([]);
@@ -25,7 +26,7 @@ const QuizTaking = () => {
         const getQuizAttemptById = async (attemptId: string) => {
             try {
                 const data = await QuizAttemptService.getQuizAttemptById(attemptId);
-                setQuizAttempt(data);
+                // setQuizAttempt(data);
                 setAnswerAttempts(data.answerAttempts);
             }
 
@@ -34,9 +35,25 @@ const QuizTaking = () => {
             }
         }
         getQuizAttemptById(attemptId!);
-    }, [])
+    }, [answerAttempts])
+
+    // useEffect(() => {
+    //     const fetchAllQuestions = async () => {
+    //         try {
+    //             const data = await AnimalService.getAllByQuizId(quizId);
+    //             setAnimals(data);
+    //         }
+
+    //         catch (err) {
+    //             console.log(err);
+    //         }
+    //     }
+
+    //     fetchAllQuestions();
+    // }, [pageIndex]);
 
     useEffect(() => {
+
         const fetchAllQuestions = async () => {
             try {
                 const data = await AnimalService.getAllByQuizId(quizId);
@@ -49,9 +66,7 @@ const QuizTaking = () => {
         }
 
         fetchAllQuestions();
-    }, [pageIndex]);
 
-    useEffect(() => {
         setCurrentQuestion(animals[pageIndex - 1]);
         if (!currentQuestion) return;
 
@@ -67,11 +82,29 @@ const QuizTaking = () => {
         fetchAnswers();
     }, [pageIndex, animals]);
 
+    const updateAnswerAttempt = async (answerId: number) => {
+        try {
+            const attempt = answerAttempts.find(x => x.answerId === answerId);
+
+            const dataObject: UpdateAnswerAttemptRequest = {
+                id: attempt?.id,
+                isMarked: false,
+                quizAttemptId: attemptId,
+                answerId: answerId,
+            }
+
+            await AnswerAttemptService.updateAnswerAttempt(dataObject);
+        }
+
+        catch (err) {
+            console.log(err);
+        }
+    }
 
     return (
         <div>
             <DefaultLayout>
-                <p className='text-lg text-[#586380]'>Question 1</p>
+                <p className='text-lg text-[#586380]'>Question {pageIndex}</p>
 
                 {/* Image holder */}
                 <div className='flex justify-center py-5'>
@@ -88,21 +121,33 @@ const QuizTaking = () => {
 
                 {/* Answers */}
                 <div className='grid grid-cols-1 md:grid-cols-2 gap-y-4'>
-                    {questionAnswers.map((x, i) => (
-                        <div
-                            key={x.id}
-                            className={`rounded-lg bg-white border cursor-pointer border-gray-300 w-96 py-4
-                             ${++i % 2 === 0 ? 'ml-10' : 'ml-0'} hover:border-[#939bb4]`}>
-                            <div className='flex items-center mx-5 space-x-2'>
-                                <span
-                                    className='rounded-full text-sm font-medium bg-[#edeff4] px-3 py-1'>
-                                    {i}
-                                </span>
-                                <span className='ml-5 text-gray-500'>{x.title}</span>
+                    {questionAnswers.map((x, i) => {
+                        const isSelected = answerAttempts.some(a => a.answerId === x.id);
+                        return (
+                            <div
+                                key={x.id}
+                                onClick={() => updateAnswerAttempt(x.id)}
+                                className={`rounded-lg border w-96 py-4 transition-all duration-150 cursor-pointer
+                                    ${++i % 2 === 0 ? 'ml-10' : 'ml-0'}
+                                    ${isSelected
+                                        ? 'bg-blue-100 border-blue-500 shadow-sm'
+                                        : 'bg-white border-gray-300 hover:border-[#939bb4]'}
+                                    `}
+                            >
+                                <div className='flex items-center mx-5 space-x-2'>
+                                    <span
+                                        className='rounded-full text-sm font-medium bg-[#edeff4] px-3 py-1'>
+                                        {i}
+                                    </span>
+                                    <span className={`ml-5 ${isSelected ? 'text-blue-800 font-semibold' : 'text-gray-500'}`}>
+                                        {x.title}
+                                    </span>
+                                </div>
                             </div>
-                        </div>
-                    ))}
+                        );
+                    })}
                 </div>
+
 
                 {/* Navigation Buttons */}
                 <div className='flex justify-between mt-8 gap-4'>
@@ -130,7 +175,7 @@ const QuizTaking = () => {
                             disabled={pageIndex >= animals.length}
                             onClick={() => setPageIndex(pageIndex + 1)}
                             className={`flex items-center justify-center w-1/2 border py-3 rounded-lg transition duration-200
-                        ${pageIndex >= animals.length
+                                    ${pageIndex >= animals.length
                                     ? 'bg-gray-100 text-gray-400 border-gray-200 cursor-not-allowed'
                                     : 'bg-white text-gray-700 border-gray-300 hover:shadow-md hover:ring-2 hover:ring-gray-300 cursor-pointer'}`}
                         >
@@ -162,7 +207,6 @@ const QuizTaking = () => {
 
                     }
                 </div>
-
 
                 <p className="text-center mt-4 text-sm text-gray-500">
                     Question {pageIndex} of {animals.length}

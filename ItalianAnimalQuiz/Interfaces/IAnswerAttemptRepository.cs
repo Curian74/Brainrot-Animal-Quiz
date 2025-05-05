@@ -6,5 +6,6 @@ namespace ItalianAnimalQuiz.Interfaces
     {
         Task UpdateAnswerAttempt(UpdateAnswerAttemptDto dto);
         Task <AnswerAttemptDto> GetByIdAsync(int id);
+        Task <IEnumerable<AnswerAttemptDto>> GetByQuizAttemptIdAsync(int id);
     }
 }

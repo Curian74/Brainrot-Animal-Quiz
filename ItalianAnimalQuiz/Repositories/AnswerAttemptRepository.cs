@@ -25,6 +25,15 @@ namespace ItalianAnimalQuiz.Repositories
             return answerAttempt.ToDtoFromEntity();
         }
 
+        public async Task<IEnumerable<AnswerAttemptDto>> GetByQuizAttemptIdAsync(int id)
+        {
+            var ansAttempts = await _context.AnswerAttempts.Where(a => a.QuizAttemptId == id).ToListAsync();
+
+            var dtoEntities = ansAttempts.Select(a => a.ToDtoFromEntity());
+
+            return dtoEntities;
+        }
+
         public async Task UpdateAnswerAttempt(UpdateAnswerAttemptDto dto)
         {
             var answerAttempt = await _context.AnswerAttempts
@@ -45,11 +54,13 @@ namespace ItalianAnimalQuiz.Repositories
                 return;
             }
 
-            answerAttempt.QuizAttemptId = dto.QuizAttemptId;
-            answerAttempt.AnswerId = dto.AnswerId;
-            answerAttempt.IsMarked = dto.IsMarked;
+            //answerAttempt.QuizAttemptId = dto.QuizAttemptId;
+            //answerAttempt.AnswerId = dto.AnswerId;
+            //answerAttempt.IsMarked = dto.IsMarked;
 
+            _context.Remove(answerAttempt);
             await _context.SaveChangesAsync();
         }
+
     }
 }
