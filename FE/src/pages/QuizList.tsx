@@ -13,6 +13,7 @@ const QuizList = () => {
     const [quizzes, setQuizzes] = useState<Quiz[]>([]);
     const [isLoading, setIsLoading] = useState(false);
     const [totalPages, setTotalPages] = useState(0);
+    const [totalCount, setTotalCount] = useState(0);
     const [pageIndex, setPageIndex] = useState(1);
 
     const navigate = useNavigate();
@@ -22,6 +23,7 @@ const QuizList = () => {
             setIsLoading(true);
             const data = await QuizService.getAllPagedQuiz(PAGE_SIZE, pageIndex);
             setQuizzes(data.items);
+            setTotalCount(data.totalCount)
             setTotalPages(data.totalPages);
         } catch (err) {
             console.log(err);
@@ -31,13 +33,13 @@ const QuizList = () => {
     };
 
     const createQuizAttempt = async (data: number) => {
-        try{
+        try {
             const dataResponse = await QuizAttemptService.createQuizAttempt(data);
             const attemptId = dataResponse.id;
             navigate(`/quiz-handle/${attemptId}`)
         }
 
-        catch(err){
+        catch (err) {
             console.log(err);
         }
     }
@@ -94,12 +96,19 @@ const QuizList = () => {
                         </div>
                     </div>
                 ))}
-                <div className="pb-10 flex justify-end">
-                    <Pagination
-                        count={totalPages}
-                        page={pageIndex}
-                        onChange={handlePageChange}
-                        color="primary" />
+
+                <div className="flex justify-between">
+                    <div className="ml-4 mt-2">
+                        <p className="text-sm">Showing {PAGE_SIZE} items of {totalCount} entries</p>
+                    </div>
+
+                    <div className="pb-10">
+                        <Pagination
+                            count={totalPages}
+                            page={pageIndex}
+                            onChange={handlePageChange}
+                            color="primary" />
+                    </div>
                 </div>
             </section>
         </DefaultLayout>

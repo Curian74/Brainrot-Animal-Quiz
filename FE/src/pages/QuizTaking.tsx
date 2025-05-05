@@ -15,18 +15,47 @@ const QuizTaking = () => {
     const { attemptId, quizId } = useParams();
 
     // States
-    // const [quizAttempt, setQuizAttempt] = useState<QuizAttempt>();
+    const [quizAttempt, setQuizAttempt] = useState<QuizAttempt>();
     const [currentQuestion, setCurrentQuestion] = useState<Animal>();
     const [answerAttempts, setAnswerAttempts] = useState<AnswerAttempt[]>([]);
     const [questionAnswers, setQuestionAnswers] = useState<Answer[]>([]);
     const [pageIndex, setPageIndex] = useState(1);
     const [animals, setAnimals] = useState<Animal[]>([]);
 
+    const [timeLeft, setTimeLeft] = useState<number>(0);
+
+    useEffect(() => {
+        if (!quizAttempt?.endAt) return;
+
+        const endTime = new Date(quizAttempt.endAt).getTime();
+
+        const interval = setInterval(() => {
+            const now = Date.now();
+            const diff = Math.max(0, endTime - now); // prevent negative values
+
+            setTimeLeft(diff);
+
+            if (diff <= 0) {
+                clearInterval(interval);
+                // Optionally auto-submit the quiz here
+            }
+        }, 1000); // update every second
+
+        return () => clearInterval(interval); // cleanup
+    }, [quizAttempt?.endAt]);
+
+    const formatTime = (milliseconds: number) => {
+        const totalSeconds = Math.floor(milliseconds / 1000);
+        const minutes = Math.floor(totalSeconds / 60);
+        const seconds = totalSeconds % 60;
+        return `${minutes}:${seconds.toString().padStart(2, '0')}`;
+    };
+
     useEffect(() => {
         const getQuizAttemptById = async (attemptId: string) => {
             try {
                 const data = await QuizAttemptService.getQuizAttemptById(attemptId);
-                // setQuizAttempt(data);
+                setQuizAttempt(data);
                 setAnswerAttempts(data.answerAttempts);
             }
 
@@ -94,7 +123,14 @@ const QuizTaking = () => {
     return (
         <div>
             <DefaultLayout>
-                <p className='text-lg text-[#586380]'>Question {pageIndex}</p>
+                {/* Question # and time counter */}
+                <div className='flex justify-between items-center'>
+                    <p className='text-lg text-[#586380]'>Question {pageIndex}</p>
+
+                    <div className='text-lg font-semibold text-blue-600'>
+                        Time left: {formatTime(timeLeft)}
+                    </div>
+                </div>
 
                 {/* Image holder */}
                 <div className='flex justify-center py-5'>
