@@ -35,25 +35,9 @@ const QuizTaking = () => {
             }
         }
         getQuizAttemptById(attemptId!);
-    }, [answerAttempts])
-
-    // useEffect(() => {
-    //     const fetchAllQuestions = async () => {
-    //         try {
-    //             const data = await AnimalService.getAllByQuizId(quizId);
-    //             setAnimals(data);
-    //         }
-
-    //         catch (err) {
-    //             console.log(err);
-    //         }
-    //     }
-
-    //     fetchAllQuestions();
-    // }, [pageIndex]);
+    }, [attemptId])
 
     useEffect(() => {
-
         const fetchAllQuestions = async () => {
             try {
                 const data = await AnimalService.getAllByQuizId(quizId);
@@ -66,13 +50,17 @@ const QuizTaking = () => {
         }
 
         fetchAllQuestions();
+    }, [quizId]);
 
-        setCurrentQuestion(animals[pageIndex - 1]);
-        if (!currentQuestion) return;
+    useEffect(() => {
+        if (!animals.length) return;
+
+        const current = animals[pageIndex - 1];
+        setCurrentQuestion(current);
 
         const fetchAnswers = async () => {
             try {
-                const answers = await AnswerService.getAnswersByQuestionId(currentQuestion.id);
+                const answers = await AnswerService.getAnswersByQuestionId(current.id);
                 setQuestionAnswers(answers);
             } catch (err) {
                 console.error(err);
@@ -94,6 +82,8 @@ const QuizTaking = () => {
             }
 
             await AnswerAttemptService.updateAnswerAttempt(dataObject);
+            const updated = await QuizAttemptService.getQuizAttemptById(attemptId!);
+            setAnswerAttempts(updated.answerAttempts);
         }
 
         catch (err) {
