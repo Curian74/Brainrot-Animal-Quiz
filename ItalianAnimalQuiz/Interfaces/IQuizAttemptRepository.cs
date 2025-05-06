@@ -7,5 +7,6 @@ namespace ItalianAnimalQuiz.Interfaces
     {
         Task<QuizAttempt> CreateQuizAttemptAsync(NewQuizAttemptDto newQuizAttemptDto);
         Task<QuizAttemptDto> GetQuizAttemptByIdAsync(int attemptId);
+        Task<QuizAttemptDto> SubmitQuizAttemptAsync(SubmitQuizAttemptDto dto);
     }
 }

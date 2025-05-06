@@ -55,14 +55,35 @@ namespace ItalianAnimalQuiz.Repositories
             dtoEntity.AnswerAttempts = await _context.AnswerAttempts
                 .Where(x => x.QuizAttemptId == attemptId)
                 .Select(x => new AnswerAttemptDto
-            {
-                Id = x.Id,
-                AnswerId = x.AnswerId,
-                IsMarked = x.IsMarked,
-                QuizAttemptId = x.QuizAttemptId,
-            }).ToListAsync();
+                {
+                    Id = x.Id,
+                    AnswerId = x.AnswerId,
+                    IsMarked = x.IsMarked,
+                    QuizAttemptId = x.QuizAttemptId,
+                }).ToListAsync();
 
             return dtoEntity ?? throw new KeyNotFoundException("Quiz attempt not found.");
+        }
+
+        public async Task<QuizAttemptDto> SubmitQuizAttemptAsync(SubmitQuizAttemptDto dto)
+        {
+            var quizAttempt = await _context.QuizAttempts
+                .Include(q => q.AnswerAttempts)
+                .FirstOrDefaultAsync(a => a.Id == dto.Id)
+                ?? throw new KeyNotFoundException("Quiz attempt not found.");
+
+            var quiz = await _context.Quizzes
+                .FirstOrDefaultAsync(x => x.Id == quizAttempt.QuizId)
+                ?? throw new KeyNotFoundException("Quiz not found.");
+
+            quizAttempt.Score = dto.Score;
+            quizAttempt.IsFinished = true;
+            quizAttempt.TimeTakenInSeconds = dto.TimeTakenInSeconds;
+            quizAttempt.IsPassed = dto.Score >= (quiz.NumberOfQuestions / 2);
+
+            await _context.SaveChangesAsync();
+
+            return quizAttempt.ToDtoFromEntity();
         }
     }
 }

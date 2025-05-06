@@ -57,5 +57,26 @@ namespace ItalianAnimalQuiz.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+        [HttpPut]
+        public async Task<IActionResult> SubmitQuizAttempt([FromBody] SubmitQuizAttemptDto dto)
+        {
+            try
+            {
+                QuizAttemptDto quiz = await _quizAttemptRepository.SubmitQuizAttemptAsync(dto);
+
+                return Ok(quiz);
+            }
+
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }
