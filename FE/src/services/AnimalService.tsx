@@ -1,8 +1,8 @@
 
 import api from '../types/api';
 
-const GetPagedAnimals = async (pageSize: number, pageIndex: number, quizId: number | string | undefined) => {
-    const response = await api.get(`Animal/GetPaged?PageSize=${pageSize}&PageIndex=${pageIndex}&QuizId=${quizId}`);
+const getPagedAnimals = async (pageSize: number, pageIndex: number) => {
+    const response = await api.get(`Animal/GetPaged?PageSize=${pageSize}&PageIndex=${pageIndex}`);
     return response.data; 
 }
 
@@ -17,7 +17,7 @@ const getAnimalById = async (animalId: string | number | undefined) => {
 }
 
 const AnimalService = {
-    GetPagedAnimals,
+    getPagedAnimals,
     getAnimalById,
     getAllByQuizId,
 }

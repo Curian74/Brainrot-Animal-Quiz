@@ -70,6 +70,7 @@ const QuizTaking = () => {
         const fetchAllQuestions = async () => {
             try {
                 const data = await AnimalService.getAllByQuizId(quizId);
+                console.log(data);
                 setAnimals(data);
             }
 

@@ -32,11 +32,11 @@ const QuizList = () => {
         }
     };
 
-    const createQuizAttempt = async (data: number) => {
+    const createQuizAttempt = async (quizId: number) => {
         try {
-            const dataResponse = await QuizAttemptService.createQuizAttempt(data);
+            const dataResponse = await QuizAttemptService.createQuizAttempt(quizId);
             const attemptId = dataResponse.id;
-            navigate(`/quiz-handle/${attemptId}`)
+            navigate(`/quiz-handle/${attemptId}/${quizId}`)
         }
 
         catch (err) {

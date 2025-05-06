@@ -19,12 +19,7 @@ namespace ItalianAnimalQuiz.Repositories
 
         public async Task<PagedResult<AnimalDto>> GetAllAsync(AnimalQuery query)
         {
-            var animals = _context.Animals.AsQueryable();
-
-            if (query.QuizId.HasValue)
-            {
-                animals = animals.Where(a => a.Quizzes!.Any(q => q.Id == query.QuizId.Value));
-            }
+            var animals = _context.Animals.Include(a => a.Answers).AsQueryable();
 
             var animalDto = animals.Select(x => x.ToDto());
 
@@ -38,7 +33,18 @@ namespace ItalianAnimalQuiz.Repositories
 
         public async Task<IEnumerable<AnimalDto>> GetAllByQuizIdAsync(int quizId)
         {
-            var animals = await _context.Animals.ToListAsync();
+
+            var quiz = await _context.Quizzes.FirstOrDefaultAsync(x => x.Id == quizId);
+
+            if (quiz == null)
+            {
+                throw new KeyNotFoundException("Quiz not found.");
+            }
+
+            var animals = await _context.Animals
+                .Include(a => a.Quizzes)
+                .Where(a => a.Quizzes.Contains(quiz))
+                .ToListAsync();
 
             var dtoEntities = animals.Select(a => a.ToDto());
 

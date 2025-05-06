@@ -38,8 +38,7 @@ const CreateQuiz = () => {
 
     const getAllAnimals = async () => {
         try {
-            const data = await AnimalService.GetPagedAnimals(PAGE_SIZE, pageIndex);
-            console.log(data);
+            const data = await AnimalService.getPagedAnimals(PAGE_SIZE, pageIndex);
             setAnimals(data.items);
         }
 
@@ -49,6 +48,7 @@ const CreateQuiz = () => {
     }
 
     const createQuiz = async (formData: CreateQuizRequest) => {
+        console.log(formData);
         const isConfirmed = confirm('Are you sure you want to create the quiz?');
 
         if (!isConfirmed) return;
@@ -148,7 +148,7 @@ const CreateQuiz = () => {
 
                     {animals.map((q, index) => (
                         <div
-                            key={index}
+                            key={q.id}
                             className="flex items-start gap-3 p-2 border rounded bg-white shadow-sm"
                         >
                             <input
@@ -166,7 +166,7 @@ const CreateQuiz = () => {
 
                                 <div className='mt-3'>
                                     {q.answers.map((a) => (
-                                        <p>{++index}. {a.title} {a.isCorrect && '✅'}</p>
+                                        <p key={a.id}>{++index}. {a.title} {a.isCorrect && '✅'}</p>
                                     ))}
                                 </div>
                             </div>

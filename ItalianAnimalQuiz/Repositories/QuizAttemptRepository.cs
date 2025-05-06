@@ -52,11 +52,14 @@ namespace ItalianAnimalQuiz.Repositories
 
             var dtoEntity = quizAttempt.ToDtoFromEntity();
 
-            dtoEntity.AnswerAttempts = await _context.AnswerAttempts.Select(x => new AnswerAttemptDto
+            dtoEntity.AnswerAttempts = await _context.AnswerAttempts
+                .Where(x => x.QuizAttemptId == attemptId)
+                .Select(x => new AnswerAttemptDto
             {
                 Id = x.Id,
                 AnswerId = x.AnswerId,
                 IsMarked = x.IsMarked,
+                QuizAttemptId = x.QuizAttemptId,
             }).ToListAsync();
 
             return dtoEntity ?? throw new KeyNotFoundException("Quiz attempt not found.");
