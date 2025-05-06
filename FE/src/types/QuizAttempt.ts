@@ -15,3 +15,9 @@ export interface QuizAttempt {
 export interface CreateQuizAttemptRequest {
     quizId: number;
 }
+
+export interface SubmitQuizAttemptRequest {
+    id: number,
+    timeTakenInSeconds: number,
+    score: number;
+}

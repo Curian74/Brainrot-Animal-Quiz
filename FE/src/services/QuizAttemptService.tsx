@@ -1,4 +1,5 @@
 
+import { SubmitQuizAttemptRequest } from '@/types/QuizAttempt';
 import api from '../types/api'
 
 const createQuizAttempt = async (quizId: number) => {
@@ -13,9 +14,15 @@ const getQuizAttemptById = async (attemptId: string) => {
     return response.data;
 }
 
+const submitQuizAttempt = async (requestData: SubmitQuizAttemptRequest) => {
+    const response = await api.put(`QuizAttempt/SubmitQuizAttempt`, requestData)
+    return response.data;
+}
+
 const QuizAttemptService = {
     createQuizAttempt,
-    getQuizAttemptById
+    getQuizAttemptById,
+    submitQuizAttempt
 }
 
 export default QuizAttemptService;

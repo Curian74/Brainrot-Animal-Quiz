@@ -9,6 +9,9 @@ import AnswerService from '@/services/AnswerService';
 import AnimalService from '@/services/AnimalService';
 import { Animal } from '@/types/Animal';
 import AnswerAttemptService from '@/services/AnswerAttemptService';
+import QuizTakingModal from '@/layouts/QuizTakingModal';
+import { title } from 'process';
+import messageConstant from '../constants/messageConstant.json'
 
 const QuizTaking = () => {
 
@@ -21,8 +24,11 @@ const QuizTaking = () => {
     const [questionAnswers, setQuestionAnswers] = useState<Answer[]>([]);
     const [pageIndex, setPageIndex] = useState(1);
     const [animals, setAnimals] = useState<Animal[]>([]);
-
+    const [isModalOpen, setIsModalOpen] = useState(false);
     const [timeLeft, setTimeLeft] = useState<number>(0);
+    const [modalDescription, setModalDescription] = useState('');
+    const [modalTitle, setModalTitle] = useState('');
+    const [answeredQuestionMsg, setAnsweredQuestionMsg] = useState('');
 
     useEffect(() => {
         if (!quizAttempt?.endAt) return;
@@ -121,9 +127,43 @@ const QuizTaking = () => {
         }
     }
 
+    const updateModalMessage = () => {
+        if (answerAttempts.length === 0) {
+            setModalTitle('Exit Exam?');
+            setModalDescription(messageConstant.MSG_01)
+        }
+
+        else if (answerAttempts.length < animals.length) {
+            setModalTitle('Score Exam?');
+            setAnsweredQuestionMsg(`${answerAttempts.length} of ${animals.length} Questions Answered`);
+            setModalDescription(messageConstant.MSG_02)
+        }
+
+        else {
+            setModalTitle('Score Exam?');
+            setAnsweredQuestionMsg('');
+            setModalDescription(messageConstant.MSG_02)
+        }
+    }
+
+    const toggleModal = () => {
+        updateModalMessage();
+        setIsModalOpen(prev => !prev);
+    }
+
     return (
         <div>
             <DefaultLayout>
+                {/* Modal */}
+                <div className="flex justify-center mt-12">
+                    <QuizTakingModal
+                        isOpen={isModalOpen}
+                        answeredQuestionMsg={answeredQuestionMsg}
+                        description={modalDescription}
+                        title={modalTitle}
+                        toggleModalState={toggleModal}
+                    />
+                </div>
                 {/* Question # and time counter */}
                 <div className='flex justify-between items-center'>
                     <p className='text-lg text-[#586380]'>Question {pageIndex}</p>
@@ -218,9 +258,7 @@ const QuizTaking = () => {
                         <div className="w-1/2">
                             <button
                                 className="w-full flex items-center cursor-pointer justify-center bg-green-500 hover:bg-green-600 text-white font-semibold py-3 rounded-lg text-lg shadow-md transition duration-200"
-                                onClick={() => {
-                                    // handle submission here
-                                }}
+                                onClick={toggleModal}
                             >
                                 <span className="mr-2">Submit</span>
                                 <svg xmlns="http://www.w3.org/2000/svg"

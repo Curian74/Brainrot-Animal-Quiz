@@ -41,7 +41,6 @@ const NewExam = () => {
 
     return (
         <div>
-
             <div>
                 <button
                     onClick={() => navigate("quiz-list")}
