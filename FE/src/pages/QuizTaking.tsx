@@ -11,6 +11,7 @@ import { Animal } from '@/types/Animal';
 import AnswerAttemptService from '@/services/AnswerAttemptService';
 import QuizTakingModal from '@/layouts/QuizTakingModal';
 import messageConstant from '../constants/messageConstant.json'
+import NotFoundPage from './NotFoundPage';
 
 const QuizTaking = () => {
 
@@ -59,7 +60,7 @@ const QuizTaking = () => {
     useEffect(() => {
         const getQuizAttemptById = async (attemptId: string) => {
             try {
-                const data = await QuizAttemptService.getQuizAttemptById(attemptId);
+                const data = await QuizAttemptService.getQuizAttemptById(attemptId, quizId!);
                 setQuizAttempt(data);
                 setAnswerAttempts(data.answerAttempts);
             }
@@ -118,7 +119,7 @@ const QuizTaking = () => {
             }
 
             await AnswerAttemptService.updateAnswerAttempt(dataObject);
-            const updated = await QuizAttemptService.getQuizAttemptById(attemptId!);
+            const updated = await QuizAttemptService.getQuizAttemptById(attemptId!, quizId!);
             setAnswerAttempts(updated.answerAttempts);
         }
 
@@ -158,130 +159,136 @@ const QuizTaking = () => {
     return (
         <div>
             <DefaultLayout>
-                {/* Question # and time counter */}
-                <div className='flex justify-between items-center'>
-                    <p className='text-lg text-[#586380]'>Question {pageIndex}</p>
+                {quizAttempt ? (
+                    <section>
+                    {/* Question # and time counter */}
+                    <div className='flex justify-between items-center'>
+                        <p className='text-lg text-[#586380]'>Question {pageIndex}</p>
 
-                    <div className='text-lg font-semibold text-blue-600'>
-                        Time left: {formatTime(timeLeft)}
+                        <div className='text-lg font-semibold text-blue-600'>
+                            Time left: {formatTime(timeLeft)}
+                        </div>
                     </div>
-                </div>
 
-                {/* Image holder */}
-                <div className='flex justify-center py-5'>
-                    <img
-                        className='max-h-[130px] object-contain'
-                        src={currentQuestion?.imageUrl}
-                        alt='quiz'
-                    />
-                </div>
+                    {/* Image holder */}
+                    <div className='flex justify-center py-5'>
+                        <img
+                            className='max-h-[130px] object-contain'
+                            src={currentQuestion?.imageUrl}
+                            alt='quiz'
+                        />
+                    </div>
 
-                <div className='my-7'>
-                    <p className='text-lg text-[#586380]'>Choose the correct answer(s):</p>
-                </div>
+                    <div className='my-7'>
+                        <p className='text-lg text-[#586380]'>Choose the correct answer(s):</p>
+                    </div>
 
-                {/* Answers */}
-                <div className='grid grid-cols-1 md:grid-cols-2 gap-y-4'>
-                    {questionAnswers.map((x, i) => {
-                        const isSelected = answerAttempts.some(a => a.answerId === x.id);
-                        return (
-                            <div
-                                key={x.id}
-                                onClick={() => updateAnswerAttempt(x.id)}
-                                className={`rounded-lg border w-96 py-4 transition-all duration-150 cursor-pointer
+                    {/* Answers */}
+                    <div className='grid grid-cols-1 md:grid-cols-2 gap-y-4'>
+                        {questionAnswers.map((x, i) => {
+                            const isSelected = answerAttempts.some(a => a.answerId === x.id);
+                            return (
+                                <div
+                                    key={x.id}
+                                    onClick={() => updateAnswerAttempt(x.id)}
+                                    className={`rounded-lg border w-96 py-4 transition-all duration-150 cursor-pointer
                                     ${++i % 2 === 0 ? 'ml-10' : 'ml-0'}
                                     ${isSelected
-                                        ? 'bg-blue-100 border-blue-500 shadow-sm'
-                                        : 'bg-white border-gray-300 hover:border-[#939bb4]'}
+                                            ? 'bg-blue-100 border-blue-500 shadow-sm'
+                                            : 'bg-white border-gray-300 hover:border-[#939bb4]'}
                                     `}
-                            >
-                                <div className='flex items-center mx-5 space-x-2'>
-                                    <span
-                                        className='rounded-full text-sm font-medium bg-[#edeff4] px-3 py-1'>
-                                        {i}
-                                    </span>
-                                    <span className={`ml-5 ${isSelected ? 'text-blue-800 font-semibold' : 'text-gray-500'}`}>
-                                        {x.title}
-                                    </span>
+                                >
+                                    <div className='flex items-center mx-5 space-x-2'>
+                                        <span
+                                            className='rounded-full text-sm font-medium bg-[#edeff4] px-3 py-1'>
+                                            {i}
+                                        </span>
+                                        <span className={`ml-5 ${isSelected ? 'text-blue-800 font-semibold' : 'text-gray-500'}`}>
+                                            {x.title}
+                                        </span>
+                                    </div>
                                 </div>
-                            </div>
-                        );
-                    })}
-                </div>
+                            );
+                        })}
+                    </div>
 
 
-                {/* Navigation Buttons */}
-                <div className='flex justify-between mt-8 gap-4'>
-                    {/* Previous */}
-                    <button
-                        disabled={pageIndex === 1}
-                        onClick={() => setPageIndex(pageIndex - 1)}
-                        className={`flex items-center justify-center w-1/2 border py-3 rounded-lg transition duration-200
-                        ${pageIndex === 1
-                                ? 'bg-gray-100 text-gray-400 border-gray-200 cursor-not-allowed'
-                                : 'bg-white text-gray-700 border-gray-300 hover:shadow-md hover:ring-2 hover:ring-gray-300 cursor-pointer'}`}
-                    >
-                        <svg xmlns="http://www.w3.org/2000/svg"
-                            fill="none" viewBox="0 0 24 24"
-                            strokeWidth={1.5} stroke="currentColor"
-                            className="w-5 h-5">
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M9 15 3 9m0 0 6-6M3 9h12a6 6 0 0 1 0 12h-3" />
-                        </svg>
-                        <span className='ml-2 font-medium'>Previous</span>
-                    </button>
-
-                    {/* Next */}
-                    {pageIndex < animals.length ? (
+                    {/* Navigation Buttons */}
+                    <div className='flex justify-between mt-8 gap-4'>
+                        {/* Previous */}
                         <button
-                            disabled={pageIndex >= animals.length}
-                            onClick={() => setPageIndex(pageIndex + 1)}
+                            disabled={pageIndex === 1}
+                            onClick={() => setPageIndex(pageIndex - 1)}
                             className={`flex items-center justify-center w-1/2 border py-3 rounded-lg transition duration-200
-                                    ${pageIndex >= animals.length
+                        ${pageIndex === 1
                                     ? 'bg-gray-100 text-gray-400 border-gray-200 cursor-not-allowed'
                                     : 'bg-white text-gray-700 border-gray-300 hover:shadow-md hover:ring-2 hover:ring-gray-300 cursor-pointer'}`}
                         >
-                            <span className='mr-2 font-medium'>Next</span>
                             <svg xmlns="http://www.w3.org/2000/svg"
                                 fill="none" viewBox="0 0 24 24"
                                 strokeWidth={1.5} stroke="currentColor"
                                 className="w-5 h-5">
-                                <path strokeLinecap="round" strokeLinejoin="round" d="m15 15 6-6m0 0-6-6m6 6H9a6 6 0 0 0 0 12h3" />
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M9 15 3 9m0 0 6-6M3 9h12a6 6 0 0 1 0 12h-3" />
                             </svg>
+                            <span className='ml-2 font-medium'>Previous</span>
                         </button>
-                    ) :
-                        <div className="w-1/2">
+
+                        {/* Next */}
+                        {pageIndex < animals.length ? (
                             <button
-                                className="w-full flex items-center cursor-pointer justify-center bg-green-500 hover:bg-green-600 text-white font-semibold py-3 rounded-lg text-lg shadow-md transition duration-200"
-                                onClick={toggleModal}
+                                disabled={pageIndex >= animals.length}
+                                onClick={() => setPageIndex(pageIndex + 1)}
+                                className={`flex items-center justify-center w-1/2 border py-3 rounded-lg transition duration-200
+                                    ${pageIndex >= animals.length
+                                        ? 'bg-gray-100 text-gray-400 border-gray-200 cursor-not-allowed'
+                                        : 'bg-white text-gray-700 border-gray-300 hover:shadow-md hover:ring-2 hover:ring-gray-300 cursor-pointer'}`}
                             >
-                                <span className="mr-2">Submit</span>
+                                <span className='mr-2 font-medium'>Next</span>
                                 <svg xmlns="http://www.w3.org/2000/svg"
                                     fill="none" viewBox="0 0 24 24"
                                     strokeWidth={1.5} stroke="currentColor"
-                                    className="w-6 h-6">
-                                    <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                                    className="w-5 h-5">
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="m15 15 6-6m0 0-6-6m6 6H9a6 6 0 0 0 0 12h3" />
                                 </svg>
                             </button>
-                        </div>
+                        ) :
+                            <div className="w-1/2">
+                                <button
+                                    className="w-full flex items-center cursor-pointer justify-center bg-green-500 hover:bg-green-600 text-white font-semibold py-3 rounded-lg text-lg shadow-md transition duration-200"
+                                    onClick={toggleModal}
+                                >
+                                    <span className="mr-2">Submit</span>
+                                    <svg xmlns="http://www.w3.org/2000/svg"
+                                        fill="none" viewBox="0 0 24 24"
+                                        strokeWidth={1.5} stroke="currentColor"
+                                        className="w-6 h-6">
+                                        <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                                    </svg>
+                                </button>
+                            </div>
 
-                    }
-                </div>
-
-                <p className="text-center mt-4 text-sm text-gray-500">
-                    Question {pageIndex} of {animals.length}
-                </p>
-
-                {/* Modal */}
-                {isModalOpen && (
-                    <div className="flex justify-center mt-12">
-                        <QuizTakingModal
-                            isOpen={isModalOpen}
-                            answeredQuestionMsg={answeredQuestionMsg}
-                            description={modalDescription}
-                            title={modalTitle}
-                            toggleModalState={toggleModal}
-                        />
+                        }
                     </div>
+
+                    <p className="text-center mt-4 text-sm text-gray-500">
+                        Question {pageIndex} of {animals.length}
+                    </p>
+
+                    {/* Modal */}
+                    {isModalOpen && (
+                        <div className="flex justify-center mt-12">
+                            <QuizTakingModal
+                                isOpen={isModalOpen}
+                                answeredQuestionMsg={answeredQuestionMsg}
+                                description={modalDescription}
+                                title={modalTitle}
+                                toggleModalState={toggleModal}
+                            />
+                        </div>
+                    )}
+                </section>
+                ) : (
+                    <NotFoundPage/>
                 )}
 
             </DefaultLayout>

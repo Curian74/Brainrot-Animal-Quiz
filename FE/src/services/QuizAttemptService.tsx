@@ -9,8 +9,8 @@ const createQuizAttempt = async (quizId: number) => {
     return response.data;
 }
 
-const getQuizAttemptById = async (attemptId: string) => {
-    const response = await api.get(`QuizAttempt/AttemptById?attemptId=${attemptId}`)
+const getQuizAttemptById = async (attemptId: string, quizId: string) => {
+    const response = await api.get(`QuizAttempt/AttemptById?attemptId=${attemptId}&quizId=${quizId}`)
     return response.data;
 }
 
