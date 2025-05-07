@@ -1,7 +1,4 @@
-﻿using ItalianAnimalQuiz.Models;
-using System.ComponentModel.DataAnnotations.Schema;
-
-namespace ItalianAnimalQuiz.Dtos
+﻿namespace ItalianAnimalQuiz.Dtos
 {
     public class UpdateAnswerAttemptDto
     {
@@ -12,5 +9,6 @@ namespace ItalianAnimalQuiz.Dtos
         public bool IsMarked { get; set; } = false;
 
         public int QuizAttemptId { get; set; }
+        public int AnimalId { get; set; }
     }
 }

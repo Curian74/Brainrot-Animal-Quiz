@@ -46,6 +46,7 @@ namespace ItalianAnimalQuiz.Repositories
                     QuizAttemptId = dto.QuizAttemptId,
                     AnswerId = dto.AnswerId,
                     IsMarked = dto.IsMarked,
+                    AnimalId = dto.AnimalId,
                 };
 
                 await _context.AnswerAttempts.AddAsync(newAnswerAttempt);

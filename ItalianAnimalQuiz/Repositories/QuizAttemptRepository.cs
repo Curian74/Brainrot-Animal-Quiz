@@ -60,6 +60,7 @@ namespace ItalianAnimalQuiz.Repositories
                     AnswerId = x.AnswerId,
                     IsMarked = x.IsMarked,
                     QuizAttemptId = x.QuizAttemptId,
+                    AnimalId = x.AnimalId,
                 }).ToListAsync();
 
             return dtoEntity ?? throw new KeyNotFoundException("Quiz attempt not found.");

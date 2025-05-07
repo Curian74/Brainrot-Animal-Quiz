@@ -10,7 +10,6 @@ import AnimalService from '@/services/AnimalService';
 import { Animal } from '@/types/Animal';
 import AnswerAttemptService from '@/services/AnswerAttemptService';
 import QuizTakingModal from '@/layouts/QuizTakingModal';
-import { title } from 'process';
 import messageConstant from '../constants/messageConstant.json'
 
 const QuizTaking = () => {
@@ -115,6 +114,7 @@ const QuizTaking = () => {
                 isMarked: false,
                 quizAttemptId: attemptId,
                 answerId: answerId,
+                animalId: currentQuestion?.id,
             }
 
             await AnswerAttemptService.updateAnswerAttempt(dataObject);
@@ -128,14 +128,18 @@ const QuizTaking = () => {
     }
 
     const updateModalMessage = () => {
-        if (answerAttempts.length === 0) {
+        const animalIds = new Set(answerAttempts.map((a) => a.animalId));
+        const answeredCount = animalIds.size;
+
+        if (answeredCount === 0) {
+            setAnsweredQuestionMsg('');
             setModalTitle('Exit Exam?');
             setModalDescription(messageConstant.MSG_01)
         }
 
-        else if (answerAttempts.length < animals.length) {
+        else if (answeredCount < animals.length) {
             setModalTitle('Score Exam?');
-            setAnsweredQuestionMsg(`${answerAttempts.length} of ${animals.length} Questions Answered`);
+            setAnsweredQuestionMsg(`${answeredCount} of ${animals.length} Questions Answered`);
             setModalDescription(messageConstant.MSG_02)
         }
 
@@ -154,16 +158,6 @@ const QuizTaking = () => {
     return (
         <div>
             <DefaultLayout>
-                {/* Modal */}
-                <div className="flex justify-center mt-12">
-                    <QuizTakingModal
-                        isOpen={isModalOpen}
-                        answeredQuestionMsg={answeredQuestionMsg}
-                        description={modalDescription}
-                        title={modalTitle}
-                        toggleModalState={toggleModal}
-                    />
-                </div>
                 {/* Question # and time counter */}
                 <div className='flex justify-between items-center'>
                     <p className='text-lg text-[#586380]'>Question {pageIndex}</p>
@@ -276,6 +270,19 @@ const QuizTaking = () => {
                 <p className="text-center mt-4 text-sm text-gray-500">
                     Question {pageIndex} of {animals.length}
                 </p>
+
+                {/* Modal */}
+                {isModalOpen && (
+                    <div className="flex justify-center mt-12">
+                        <QuizTakingModal
+                            isOpen={isModalOpen}
+                            answeredQuestionMsg={answeredQuestionMsg}
+                            description={modalDescription}
+                            title={modalTitle}
+                            toggleModalState={toggleModal}
+                        />
+                    </div>
+                )}
 
             </DefaultLayout>
         </div>

@@ -13,6 +13,7 @@ namespace ItalianAnimalQuiz.Mappers
                 Id = answerAttempt.Id,
                 IsMarked = answerAttempt.IsMarked,
                 QuizAttemptId = answerAttempt.QuizAttemptId,
+                AnimalId = answerAttempt.AnimalId,
             };
         }
     }

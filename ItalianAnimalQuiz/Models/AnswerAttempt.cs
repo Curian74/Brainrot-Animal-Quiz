@@ -12,6 +12,10 @@ namespace ItalianAnimalQuiz.Models
 
         public bool IsMarked { get; set; }
 
+        [ForeignKey(nameof(Animal))]
+        public int AnimalId { get; set; }
+        public Animal? Animal { get; set; }
+
         [ForeignKey(nameof(QuizAttempt))]
         public int QuizAttemptId { get; set; }
         public QuizAttempt? QuizAttempt { get; set; }

@@ -3,6 +3,7 @@ export interface AnswerAttempt {
     answerId: number,
     isMarked: boolean,
     quizAttemptId: number;
+    animalId: number;
 }
 
 export interface UpdateAnswerAttemptRequest {
@@ -10,4 +11,5 @@ export interface UpdateAnswerAttemptRequest {
     answerId: number,
     isMarked: boolean,
     quizAttemptId: number | string | undefined
+    animalId: number | undefined;
 }
