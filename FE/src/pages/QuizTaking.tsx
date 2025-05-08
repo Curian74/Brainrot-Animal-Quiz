@@ -158,16 +158,17 @@ const QuizTaking = () => {
 
     const submitQuizAttempt = async () => {
         try {
-            // const dataObject = {
-            //     id: quizAttempt?.id,
-            //     timeTakenInSeconds: number,
-            //     score: number;
-            // }
-            // const data = await QuizAttemptService.submitQuizAttempt()
+            const dataObject = {
+                id: quizAttempt?.id,
+            }
+
+            await QuizAttemptService.submitQuizAttempt(dataObject);
+            alert('Submit successfully!');
         }
 
         catch (err) {
             console.log(err);
+            alert('Failed to submit: ' + err);
         }
     }
 
@@ -297,6 +298,7 @@ const QuizTaking = () => {
                                     answeredQuestionMsg={answeredQuestionMsg}
                                     description={modalDescription}
                                     title={modalTitle}
+                                    submitHandler={submitQuizAttempt}
                                     toggleModalState={toggleModal}
                                 />
                             </div>

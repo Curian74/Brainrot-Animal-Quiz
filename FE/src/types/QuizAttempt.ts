@@ -17,5 +17,5 @@ export interface CreateQuizAttemptRequest {
 }
 
 export interface SubmitQuizAttemptRequest {
-    id: number;
+    id: number | undefined;
 }

@@ -14,9 +14,10 @@ interface QuizTakingModalProps {
   answeredQuestionMsg?: string;
   isOpen: boolean;
   toggleModalState: () => void;
+  submitHandler: () => void;
 }
 
-const QuizTakingModal = ({ title, description, answeredQuestionMsg, isOpen, toggleModalState }: QuizTakingModalProps) => {
+const QuizTakingModal = ({ title, description, answeredQuestionMsg, isOpen, toggleModalState, submitHandler}: QuizTakingModalProps) => {
   return (
     <Dialog
       open={isOpen}
@@ -41,6 +42,7 @@ const QuizTakingModal = ({ title, description, answeredQuestionMsg, isOpen, togg
           </Button>
           <Button
             type="submit"
+            onClick={submitHandler}
             className="bg-white rounded-sm border border-green-600 text-green-600 cursor-pointer 
              hover:bg-green-50 w-32 transition-colors duration-200">
             Score Exam
