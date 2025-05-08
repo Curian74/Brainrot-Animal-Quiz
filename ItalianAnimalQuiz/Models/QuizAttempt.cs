@@ -5,9 +5,11 @@ namespace ItalianAnimalQuiz.Models
     public class QuizAttempt
     {
         public int Id { get; set; }
+
         public DateTime CreateAt { get; set; } = DateTime.Now;
-        public DateTime EndAt { get; set; }
-        public double? TimeTakenInSeconds { get; set; }
+        public DateTime EndAt { get; set; }                    
+        public DateTime? SubmittedAt { get; set; }            
+        public double? TimeTakenInSeconds { get; set; }        
 
         public bool IsFinished { get; set; }
         public bool IsPassed { get; set; }
@@ -18,6 +20,6 @@ namespace ItalianAnimalQuiz.Models
         public Quiz? Quiz { get; set; }
 
         public IList<AnswerAttempt>? AnswerAttempts { get; set; }
-
     }
+
 }

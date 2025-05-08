@@ -16,7 +16,8 @@ namespace ItalianAnimalQuiz.Mappers
                 IsPassed = entity.IsPassed,
                 QuizId = entity.QuizId,
                 Score = entity.Score,
-                TimeTakenInSeconds = entity.TimeTakenInSeconds
+                TimeTakenInSeconds = entity.TimeTakenInSeconds,
+                SubmittedAt = entity.SubmittedAt,
             };
         }
     }

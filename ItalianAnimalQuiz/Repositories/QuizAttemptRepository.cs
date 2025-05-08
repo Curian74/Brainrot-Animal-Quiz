@@ -30,6 +30,7 @@ namespace ItalianAnimalQuiz.Repositories
                 IsFinished = false,
                 IsPassed = false,
                 Score = 0,
+                SubmittedAt = null,
                 TimeTakenInSeconds = null,
             };
 
@@ -41,12 +42,12 @@ namespace ItalianAnimalQuiz.Repositories
 
         public async Task<QuizAttemptDto> GetQuizAttemptByIdAsync(int attemptId, int quizId)
         {
-            var quizAttempt = await _context.QuizAttempts
+            var FinishAt = await _context.QuizAttempts
                 .Include(q => q.AnswerAttempts)
                 .FirstOrDefaultAsync(x => x.Id == attemptId && x.QuizId == quizId)
                 ?? throw new KeyNotFoundException("Quiz attempt not found.");
 
-            var dtoEntity = quizAttempt.ToDtoFromEntity();
+            var dtoEntity = FinishAt.ToDtoFromEntity();
 
             dtoEntity.AnswerAttempts = await _context.AnswerAttempts
                 .Where(x => x.QuizAttemptId == attemptId)
@@ -62,25 +63,57 @@ namespace ItalianAnimalQuiz.Repositories
             return dtoEntity;
         }
 
+
         public async Task<QuizAttemptDto> SubmitQuizAttemptAsync(SubmitQuizAttemptDto dto)
         {
             var quizAttempt = await _context.QuizAttempts
-                .Include(q => q.AnswerAttempts)
+                .Include(q => q.AnswerAttempts)!
+                    .ThenInclude(aa => aa.Answer)!
                 .FirstOrDefaultAsync(a => a.Id == dto.Id)
                 ?? throw new KeyNotFoundException("Quiz attempt not found.");
 
             var quiz = await _context.Quizzes
+                .Include(q => q.Animals)!
+                    .ThenInclude(a => a.Answers)!
                 .FirstOrDefaultAsync(x => x.Id == quizAttempt.QuizId)
                 ?? throw new KeyNotFoundException("Quiz not found.");
 
-            quizAttempt.Score = dto.Score;
+            // Group user selected answers by questionId
+            var groupedAttempts = quizAttempt.AnswerAttempts!
+                .Where(at => at.Answer != null)
+                .GroupBy(at => at.AnimalId)
+                .ToDictionary(g => g.Key, g => g.Select(at => at.Answer!).ToList());
+
+            int score = 0;
+
+            foreach (var animal in quiz.Animals!)
+            {
+                if (!groupedAttempts.TryGetValue(animal.Id, out var userAnswers))
+                {
+                    // User didnt answer this question
+                    continue;
+                }
+
+                var correctAnswers = animal.Answers!.Where(a => a.IsCorrect).ToList();
+
+                if (userAnswers.Count == correctAnswers.Count &&
+                    !userAnswers.Except(correctAnswers).Any())
+                {
+                    score++;
+                }
+            }
+
+            quizAttempt.Score = score;
             quizAttempt.IsFinished = true;
-            quizAttempt.TimeTakenInSeconds = dto.TimeTakenInSeconds;
-            quizAttempt.IsPassed = dto.Score >= (quiz.NumberOfQuestions / 2);
+            quizAttempt.SubmittedAt = DateTime.Now;
+            quizAttempt.TimeTakenInSeconds = 
+                (quizAttempt.SubmittedAt.Value - quizAttempt.CreateAt).TotalSeconds;
+            quizAttempt.IsPassed = score >= (quiz.Animals.Count / 2.0);
 
             await _context.SaveChangesAsync();
 
             return quizAttempt.ToDtoFromEntity();
         }
+
     }
 }

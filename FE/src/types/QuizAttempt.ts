@@ -4,7 +4,7 @@ export interface QuizAttempt {
     id: number;
     createAt: string;
     endAt: string;
-    timeTakenInSeconds: number | null;
+    finishAt: number | null;
     isFinished: boolean;
     isPassed: boolean;
     score: number;
@@ -17,7 +17,5 @@ export interface CreateQuizAttemptRequest {
 }
 
 export interface SubmitQuizAttemptRequest {
-    id: number,
-    timeTakenInSeconds: number,
-    score: number;
+    id: number;
 }
