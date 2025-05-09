@@ -12,6 +12,7 @@ import AnswerAttemptService from '@/services/AnswerAttemptService';
 import QuizTakingModal from '@/layouts/QuizTakingModal';
 import messageConstant from '../constants/messageConstant.json'
 import NotFoundPage from './NotFoundPage';
+import FinalScoreDialog from '@/layouts/FinalScoreDialog';
 
 const QuizTaking = () => {
 
@@ -24,11 +25,13 @@ const QuizTaking = () => {
     const [questionAnswers, setQuestionAnswers] = useState<Answer[]>([]);
     const [pageIndex, setPageIndex] = useState(1);
     const [animals, setAnimals] = useState<Animal[]>([]);
-    const [isModalOpen, setIsModalOpen] = useState(false);
     const [timeLeft, setTimeLeft] = useState<number>(0);
     const [modalDescription, setModalDescription] = useState('');
     const [modalTitle, setModalTitle] = useState('');
     const [answeredQuestionMsg, setAnsweredQuestionMsg] = useState('');
+
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isScoreModalOpen, setIsScoreModalOpen] = useState(false);
 
     useEffect(() => {
         if (!quizAttempt?.endAt) return;
@@ -41,11 +44,13 @@ const QuizTaking = () => {
 
             setTimeLeft(diff);
 
+            // Auto submit when time's up
             if (diff <= 0) {
                 clearInterval(interval);
-                // Optionally auto-submit the quiz here
+                submitQuizAttempt();
             }
-        }, 1000); // update every second
+            
+        }, 1000);
 
         return () => clearInterval(interval); // cleanup
     }, [quizAttempt?.endAt]);
@@ -57,18 +62,19 @@ const QuizTaking = () => {
         return `${minutes}:${seconds.toString().padStart(2, '0')}`;
     };
 
-    useEffect(() => {
-        const getQuizAttemptById = async (attemptId: string) => {
-            try {
-                const data = await QuizAttemptService.getQuizAttemptById(attemptId, quizId!);
-                setQuizAttempt(data);
-                setAnswerAttempts(data.answerAttempts);
-            }
-
-            catch (err) {
-                console.log(err);
-            }
+    const getQuizAttemptById = async (attemptId: string) => {
+        try {
+            const data = await QuizAttemptService.getQuizAttemptById(attemptId, quizId!);
+            setQuizAttempt(data);
+            setAnswerAttempts(data.answerAttempts);
         }
+
+        catch (err) {
+            console.log(err);
+        }
+    }
+
+    useEffect(() => {
         getQuizAttemptById(attemptId!);
     }, [attemptId])
 
@@ -163,7 +169,11 @@ const QuizTaking = () => {
             }
 
             await QuizAttemptService.submitQuizAttempt(dataObject);
-            alert('Submit successfully!');
+            await getQuizAttemptById(attemptId!);
+            setTimeout(() => {
+                setIsScoreModalOpen(true);
+            }, 200)
+            setIsModalOpen(false);  
         }
 
         catch (err) {
@@ -307,7 +317,14 @@ const QuizTaking = () => {
                 ) : (
                     <NotFoundPage />
                 )}
-
+                <FinalScoreDialog
+                    isOpen={isScoreModalOpen}
+                    score={quizAttempt?.score}
+                    status= {quizAttempt?.isPassed ? 'Passed' : 'Not Passed'}
+                    timeTaken= {quizAttempt?.timeTakenInSeconds}
+                    statusColor= {quizAttempt?.isPassed ? 'green' : 'red'}
+                    handleModalStatus={() => setIsScoreModalOpen(!isScoreModalOpen)}
+                />
             </DefaultLayout>
         </div>
     )

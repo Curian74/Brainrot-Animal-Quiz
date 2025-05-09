@@ -4,7 +4,8 @@ export interface QuizAttempt {
     id: number;
     createAt: string;
     endAt: string;
-    finishAt: number | null;
+    submittedAt: string | null;
+    timeTakenInSeconds: number | null;
     isFinished: boolean;
     isPassed: boolean;
     score: number;
