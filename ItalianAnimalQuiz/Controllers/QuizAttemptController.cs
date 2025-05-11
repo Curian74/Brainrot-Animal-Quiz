@@ -38,11 +38,11 @@ namespace ItalianAnimalQuiz.Controllers
         }
         
         [HttpGet]
-        public async Task<IActionResult> AttemptById([FromQuery] int attemptId, [FromQuery] int quizId)
+        public async Task<IActionResult> AttemptById([FromQuery] int attemptId, [FromQuery] int quizId, bool isFinished)
         {
             try
             {
-                var quizAttempt = await _quizAttemptRepository.GetQuizAttemptByIdAsync(attemptId, quizId);
+                var quizAttempt = await _quizAttemptRepository.GetQuizAttemptByIdAsync(attemptId, quizId, isFinished);
 
                 if (quizAttempt == null)
                 {

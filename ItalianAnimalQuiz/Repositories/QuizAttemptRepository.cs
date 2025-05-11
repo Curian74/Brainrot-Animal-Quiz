@@ -40,14 +40,14 @@ namespace ItalianAnimalQuiz.Repositories
             return quizAttempt;
         }
 
-        public async Task<QuizAttemptDto> GetQuizAttemptByIdAsync(int attemptId, int quizId)
+        public async Task<QuizAttemptDto> GetQuizAttemptByIdAsync(int attemptId, int quizId, bool isFinished)
         {
-            var FinishAt = await _context.QuizAttempts
+            var quizAttempt = await _context.QuizAttempts
                 .Include(q => q.AnswerAttempts)
-                .FirstOrDefaultAsync(x => x.Id == attemptId && x.QuizId == quizId)
+                .FirstOrDefaultAsync(x => x.Id == attemptId && x.QuizId == quizId && x.IsFinished == isFinished)
                 ?? throw new KeyNotFoundException("Quiz attempt not found.");
 
-            var dtoEntity = FinishAt.ToDtoFromEntity();
+            var dtoEntity = quizAttempt.ToDtoFromEntity();
 
             dtoEntity.AnswerAttempts = await _context.AnswerAttempts
                 .Where(x => x.QuizAttemptId == attemptId)
@@ -62,7 +62,6 @@ namespace ItalianAnimalQuiz.Repositories
 
             return dtoEntity;
         }
-
 
         public async Task<QuizAttemptDto> SubmitQuizAttemptAsync(SubmitQuizAttemptDto dto)
         {

@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import DefaultLayout from './DefaultLayout'
 import QuizAttemptService from '@/services/QuizAttemptService';
 import { QuizAttempt } from '@/types/QuizAttempt';
-import { useParams } from 'react-router';
+import { useNavigate, useParams } from 'react-router';
 import { AnswerAttempt, UpdateAnswerAttemptRequest } from '@/types/AnswerAttempt';
 import { Answer } from '@/types/Answer';
 import AnswerService from '@/services/AnswerService';
@@ -17,6 +17,7 @@ import FinalScoreDialog from '@/layouts/FinalScoreDialog';
 const QuizTaking = () => {
 
     const { attemptId, quizId } = useParams();
+    const navigate = useNavigate();
 
     // States
     const [quizAttempt, setQuizAttempt] = useState<QuizAttempt>();
@@ -32,9 +33,11 @@ const QuizTaking = () => {
 
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isScoreModalOpen, setIsScoreModalOpen] = useState(false);
+    const [isFinished, setIsFinished] = useState(false);
 
     useEffect(() => {
-        if (!quizAttempt?.endAt) return;
+        // Stop the function if the user finished the quiz
+        if (!quizAttempt?.endAt || isFinished) return;
 
         const endTime = new Date(quizAttempt.endAt).getTime();
 
@@ -51,9 +54,8 @@ const QuizTaking = () => {
             }
             
         }, 1000);
-
         return () => clearInterval(interval); // cleanup
-    }, [quizAttempt?.endAt]);
+    }, [quizAttempt?.endAt, isFinished]);
 
     const formatTime = (milliseconds: number) => {
         const totalSeconds = Math.floor(milliseconds / 1000);
@@ -62,9 +64,9 @@ const QuizTaking = () => {
         return `${minutes}:${seconds.toString().padStart(2, '0')}`;
     };
 
-    const getQuizAttemptById = async (attemptId: string) => {
+    const getQuizAttemptById = async (attemptId: string, isFinished: boolean) => {
         try {
-            const data = await QuizAttemptService.getQuizAttemptById(attemptId, quizId!);
+            const data = await QuizAttemptService.getQuizAttemptById(attemptId, quizId!, isFinished);
             setQuizAttempt(data);
             setAnswerAttempts(data.answerAttempts);
         }
@@ -75,7 +77,7 @@ const QuizTaking = () => {
     }
 
     useEffect(() => {
-        getQuizAttemptById(attemptId!);
+        getQuizAttemptById(attemptId!, false);
     }, [attemptId])
 
     useEffect(() => {
@@ -125,7 +127,7 @@ const QuizTaking = () => {
             }
 
             await AnswerAttemptService.updateAnswerAttempt(dataObject);
-            const updated = await QuizAttemptService.getQuizAttemptById(attemptId!, quizId!);
+            const updated = await QuizAttemptService.getQuizAttemptById(attemptId!, quizId!, false);
             setAnswerAttempts(updated.answerAttempts);
         }
 
@@ -168,8 +170,9 @@ const QuizTaking = () => {
                 id: quizAttempt?.id,
             }
 
+            setIsFinished(true);
             await QuizAttemptService.submitQuizAttempt(dataObject);
-            await getQuizAttemptById(attemptId!);
+            await getQuizAttemptById(attemptId!, true);
             setTimeout(() => {
                 setIsScoreModalOpen(true);
             }, 200)
@@ -323,7 +326,7 @@ const QuizTaking = () => {
                     status= {quizAttempt?.isPassed ? 'Passed' : 'Not Passed'}
                     timeTaken= {quizAttempt?.timeTakenInSeconds}
                     statusColor= {quizAttempt?.isPassed ? 'green' : 'red'}
-                    handleModalStatus={() => setIsScoreModalOpen(!isScoreModalOpen)}
+                    handleModalStatus={() => navigate('/quiz-list')}
                 />
             </DefaultLayout>
         </div>

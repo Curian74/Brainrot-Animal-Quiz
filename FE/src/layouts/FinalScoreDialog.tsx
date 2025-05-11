@@ -16,7 +16,7 @@ interface FinalScoreDialogProps {
   handleModalStatus: () => void;
 }
 
-const FinalScoreDialog = ({ score, status, timeTaken, isOpen, statusColor, handleModalStatus}: FinalScoreDialogProps) => {
+const FinalScoreDialog = ({ score, status, timeTaken, isOpen, statusColor, handleModalStatus }: FinalScoreDialogProps) => {
   return (
     <Dialog open={isOpen} onOpenChange={handleModalStatus}>
       <DialogContent className="sm:max-w-[400px] text-center">
@@ -49,7 +49,7 @@ const FinalScoreDialog = ({ score, status, timeTaken, isOpen, statusColor, handl
             onClick={handleModalStatus}
             className="rounded-lg hover:bg-[#eceaea] transition cursor-pointer font-semibold"
             variant="secondary">
-            Close
+            Back to quiz list
           </Button>
         </DialogFooter>
       </DialogContent>
