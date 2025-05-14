@@ -16,5 +16,14 @@ namespace ItalianAnimalQuiz.Mappers
                 Answers = animal.Answers?.Select(x => x.ToDto()).ToList(),
             };
         }
+
+        public static Animal ToEntityFromCreateDto(this CreateAnimalDto dto)
+        {
+            return new Animal
+            {
+                ImageUrl = dto.ImageUrl,
+                Title = dto.Title,
+            };
+        }
     }
 }

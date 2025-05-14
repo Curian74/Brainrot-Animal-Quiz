@@ -2,6 +2,7 @@
 using ItalianAnimalQuiz.Dtos;
 using ItalianAnimalQuiz.Interfaces;
 using ItalianAnimalQuiz.Mappers;
+using ItalianAnimalQuiz.Models;
 using ItalianAnimalQuiz.Queries;
 using ItalianAnimalQuiz.Utils;
 using Microsoft.EntityFrameworkCore;
@@ -15,6 +16,37 @@ namespace ItalianAnimalQuiz.Repositories
         public AnimalRepository(ApplicationDbContext context)
         {
             _context = context;
+        }
+
+        public async Task<AnimalDto> CreateAnimalAsync(CreateAnimalDto dto)
+        {
+            var animal = new Animal
+            {
+                Title = dto.Title,
+                ImageUrl = dto.ImageUrl,
+            };
+
+            await _context.Animals.AddAsync(animal);
+            await _context.SaveChangesAsync();
+
+            var answerList = new List<Answer>();
+
+            foreach (var a in dto.Answers)
+            {
+                var ans = new Answer
+                {
+                    Title = a.Title,
+                    AnimalId = animal.Id,
+                    IsCorrect = a.IsCorrect,
+                };
+
+                answerList.Add(ans);
+            }
+
+            animal.Answers = answerList;
+            await _context.SaveChangesAsync();
+
+            return animal.ToDto();
         }
 
         public async Task<PagedResult<AnimalDto>> GetAllAsync(AnimalQuery query)

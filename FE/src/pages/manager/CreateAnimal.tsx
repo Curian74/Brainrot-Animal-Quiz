@@ -40,13 +40,16 @@ const CreateAnimal: React.FC = () => {
             <h2 className="text-xl font-semibold">Thêm câu hỏi mới</h2>
 
             <div>
-                <label className="block font-medium mb-1">Nội dung câu hỏi:</label>
+                {/* <label className="block font-medium mb-1">Nội dung câu hỏi:</label>
                 <textarea
                     className="w-full border p-2 rounded"
                     value={question}
                     onChange={(e) => setQuestion(e.target.value)}
                     rows={3}
-                />
+                /> */}
+
+                
+                
             </div>
 
             <div className="space-y-3">
