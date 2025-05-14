@@ -20,30 +20,24 @@ namespace ItalianAnimalQuiz.Repositories
 
         public async Task<AnimalDto> CreateAnimalAsync(CreateAnimalDto dto)
         {
+            if (dto.Answers == null || !dto.Answers.Any())
+            {
+                throw new ArgumentException("Must provide answers for the question.");
+            }
+
             var animal = new Animal
             {
                 Title = dto.Title,
                 ImageUrl = dto.ImageUrl,
+                Answers = dto.Answers.Select(a => new Answer
+                {
+                    Title = a.Title,
+                    IsCorrect = a.IsCorrect,
+                })
+                .ToList()
             };
 
             await _context.Animals.AddAsync(animal);
-            await _context.SaveChangesAsync();
-
-            var answerList = new List<Answer>();
-
-            foreach (var a in dto.Answers)
-            {
-                var ans = new Answer
-                {
-                    Title = a.Title,
-                    AnimalId = animal.Id,
-                    IsCorrect = a.IsCorrect,
-                };
-
-                answerList.Add(ans);
-            }
-
-            animal.Answers = answerList;
             await _context.SaveChangesAsync();
 
             return animal.ToDto();

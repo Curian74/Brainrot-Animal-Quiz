@@ -44,6 +44,11 @@ namespace ItalianAnimalQuiz.Controllers
                 return Ok(data);
             }
 
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
             catch (Exception ex)
             {
                 return BadRequest(ex.Message);
