@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import Test from '../Test'
 
 interface Answer {
     content: string
@@ -9,35 +10,36 @@ const CreateAnimal: React.FC = () => {
     const [question, setQuestion] = useState('')
     const [answers, setAnswers] = useState<Answer[]>([
         { content: '', isCorrect: false },
-        { content: '', isCorrect: false },
-        { content: '', isCorrect: false },
-        { content: '', isCorrect: false }
+        // { content: '', isCorrect: false },
     ])
-
-    const handleAnswerChange = (index: number, field: 'content' | 'isCorrect', value: string | boolean) => {
-        const newAnswers = [...answers]
-        if (field === 'content') {
-            newAnswers[index].content = value as string
-        } else {
-            newAnswers[index].isCorrect = value as boolean
-        }
-        setAnswers(newAnswers)
-    }
 
     const handleSubmit = () => {
         const payload = {
             questionContent: question,
             answers: answers
         }
+    }
 
-        console.log('Submitting:', payload)
+    const newAnswer = () => {
+        const newAns = [...answers, {
+            content: '',
+            isCorrect: false
+        }];
 
-        // TODO: Gửi payload lên API backend (POST)
+        setAnswers(newAns);
+    }
+
+    const handleAnswerCorrectStatusChange = (index: number) => {
+        const newAns = answers.map((a, i) => (
+            i === index ? {...a, isCorrect: !a.isCorrect} : a
+        ))
+
+        setAnswers(newAns);
     }
 
     return (
         <div className="max-w-xl mx-auto p-4 bg-white rounded shadow space-y-4">
-            <h2 className="text-xl font-semibold">Thêm câu hỏi mới</h2>
+            <h2 className="text-xl font-semibold">New Animal</h2>
 
             <div>
                 {/* <label className="block font-medium mb-1">Nội dung câu hỏi:</label>
@@ -48,8 +50,6 @@ const CreateAnimal: React.FC = () => {
                     rows={3}
                 /> */}
 
-                
-                
             </div>
 
             <div className="space-y-3">
@@ -58,31 +58,34 @@ const CreateAnimal: React.FC = () => {
                         <input
                             type="text"
                             className="flex-1 border p-2 rounded"
-                            placeholder={`Đáp án ${String.fromCharCode(65 + index)}`}
+                            placeholder={`Đáp án ${index}`}
                             value={answer.content}
-                            onChange={(e) =>
-                                handleAnswerChange(index, 'content', e.target.value)
-                            }
                         />
                         <label className="flex items-center space-x-1">
                             <input
                                 type="checkbox"
+                                onChange={() => handleAnswerCorrectStatusChange(index)}
                                 checked={answer.isCorrect}
-                                onChange={(e) =>
-                                    handleAnswerChange(index, 'isCorrect', e.target.checked)
-                                }
                             />
-                            <span>Đúng</span>
+                            <span>Is Correct</span>
                         </label>
                     </div>
                 ))}
+
+                <button
+                    className="bg-white border shadow-xs transition border-gray-300 rounded-md p-2 text-black text-sm font-semibold
+                    hover:bg-[#f5f5f5] cursor-pointer"
+                    onClick={newAnswer}
+                >
+                    New Answer
+                </button>
             </div>
 
             <button
-                className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+                className="bg-blue-600 cursor-pointer text-white px-4 py-2 rounded hover:bg-blue-700"
                 onClick={handleSubmit}
             >
-                Lưu câu hỏi
+                Create
             </button>
         </div>
     )
