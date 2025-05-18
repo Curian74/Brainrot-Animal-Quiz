@@ -1,4 +1,5 @@
 
+import { CreateAnimalRequest } from '@/types/Animal';
 import api from '../types/api';
 
 const getPagedAnimals = async (pageSize: number, pageIndex: number) => {
@@ -16,10 +17,16 @@ const getAnimalById = async (animalId: string | number | undefined) => {
     return response.data; 
 }
 
+const createAnimal = async (payload: CreateAnimalRequest) => {
+    const response = await api.post('Animal/CreateAnimal', payload);
+    return response.data;
+}
+
 const AnimalService = {
     getPagedAnimals,
     getAnimalById,
     getAllByQuizId,
+    createAnimal
 }
 
 export default AnimalService;

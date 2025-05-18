@@ -27,7 +27,7 @@ namespace ItalianAnimalQuiz.Repositories
 
             var animal = new Animal
             {
-                Title = dto.Title,
+                Title = "",
                 ImageUrl = dto.ImageUrl,
                 Answers = dto.Answers.Select(a => new Answer
                 {

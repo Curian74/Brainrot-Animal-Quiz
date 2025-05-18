@@ -2,7 +2,6 @@
 {
     public class CreateAnimalDto
     {
-        public string? Title { get; set; }
         public string? ImageUrl { get; set; }
         public List<AnswerListDto>? Answers { get; set; }
     }

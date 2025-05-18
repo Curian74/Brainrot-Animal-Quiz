@@ -22,7 +22,6 @@ namespace ItalianAnimalQuiz.Mappers
             return new Animal
             {
                 ImageUrl = dto.ImageUrl,
-                Title = dto.Title,
             };
         }
     }
